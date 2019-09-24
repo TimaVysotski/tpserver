@@ -2,12 +2,18 @@ import models from "../models";
 
 export const createUserWithMessages = async () => {
     const user1 = new models.User({
-        username: 'pasha.perec@gmail.com',
+        username: 'pasha',
         password: 'test',
+        gender: 'male',
+    });
+    const user2 = new models.User({
+        username: 'username',
+        password: 'password',
+        gender: 'male',
     });
 
     const post1 = new models.Post({
-        text: 'First Post of Pash Perec',
+        text: 'First Post of Pasha Perec',
         user: user1.id,
     });
     const post2 = new models.Post({
@@ -17,6 +23,7 @@ export const createUserWithMessages = async () => {
   
 
     await user1.save();
+    await user2.save();
 
     await post1.save();
     await post2.save();
