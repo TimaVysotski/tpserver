@@ -1,14 +1,13 @@
 import dotenv from "dotenv";
 import express from "express";
 import models, { connectDB } from "./models";
-import {sessionHandler} from "./handlers/session-handler";
-import {passportHandler} from "./handlers/passport-handler";
+import { sessionHandler } from "./handlers/session-handler";
+import { passportHandler } from "./handlers/passport-handler";
 import { createUserWithMessages } from "./seeds/user";
 import { bodyParserHandler } from "./handlers/bodyParser-handler";
 import { cookieParserHandler } from "./handlers/cookieParser-handler"
 import { login, logout } from "./routes/auth";
 import { frontPage } from "./routes/frontpage";
-import bodyParser from "body-parser";
 
 dotenv.config();
 
@@ -16,20 +15,15 @@ const app = express();
 
 const eraseDatabaseOnSync = true;
 
-// bodyParserHandler.init(app);
-// app.use(bodyParser.urlencoded({
-//     extended: true
-//   }));
-app.use(bodyParser.json());
-
+bodyParserHandler.init(app);
 cookieParserHandler.init(app);
 sessionHandler.init(app);
 passportHandler.init(app);
 
 connectDB().then(async () => {
-    if(eraseDatabaseOnSync){
+    if (eraseDatabaseOnSync) {
         await Promise.all([
-            models.User.deleteMany({}), 
+            models.User.deleteMany({}),
             models.Post.deleteMany({})
         ]);
         createUserWithMessages();
@@ -47,4 +41,3 @@ app.get('/', frontPage.get);
 
 app.post("/login", login.post);
 app.post("/logout", logout.post);
-

@@ -4,6 +4,7 @@ export interface IUser extends Document {
     username: string;
     password: string;
     gender: string;
+    isAuthenticated: boolean,
     id: string;
 }
 
@@ -19,6 +20,9 @@ const UserSchema = new Schema({
     },
     gender:{
         type: String,
+    },
+    isAuthenticated: {
+        type: Boolean,
     }
 });
 

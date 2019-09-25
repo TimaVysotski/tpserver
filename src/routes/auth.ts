@@ -15,10 +15,13 @@ export const login = {
                     req.logIn(user, (error) => {
                         if (error) {
                             console.error("error = ", error);
+                        } else {
+                            user.isAuthenticated = true;
+                            res.send({ username: user.username, gender: user.gender, isAuthenticated: user.isAuthenticated});
                         }
                     });
-                    // res.send("Console error")
-                    res.send({ username: user.username, gender: user.gender });
+                    // user.isAuthenticated = true;
+                    // res.send({ username: user.username, gender: user.gender, isAuthenticated: user.isAuthenticated});
                 } else {
                     res.status(401);
                     res.send(info);

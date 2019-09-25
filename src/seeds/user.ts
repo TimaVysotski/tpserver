@@ -5,11 +5,13 @@ export const createUserWithMessages = async () => {
         username: 'pasha',
         password: 'test',
         gender: 'male',
+        isAuthenticated: false,
     });
     const user2 = new models.User({
         username: 'username',
         password: 'password',
         gender: 'male',
+        isAuthenticated: false,
     });
 
     const post1 = new models.Post({
@@ -24,7 +26,8 @@ export const createUserWithMessages = async () => {
 
     await user1.save();
     await user2.save();
-
+   
+   
     await post1.save();
     await post2.save();
 }
