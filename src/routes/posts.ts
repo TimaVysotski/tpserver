@@ -1,32 +1,34 @@
 import express from "express";
-import models from "../models/index"
+import Post from "../logic/post";
+
+const postMethods = new Post;
 
 export const posts = {
-  get: async (req: express.Request, res: express.Response) => {
-    try {
-      const result = await models.post.find();
-      res.send(result);
-    } catch{
-    }
+  get: (req: express.Request, res: express.Response) => {
+    postMethods.showPosts(req, res);
   }
 }
 
 export const currentPost = {
-  get: async (req: express.Request, res: express.Response) => {
-    try {
-      const result = await models.post.findOne({ 'id': req.body.id });
-      res.send(result);
-    } catch {
-    }
+  get: (req: express.Request, res: express.Response) => {
+    postMethods.showCurrentPost(req, res);
   }
 }
 
 export const createPost = {
-  post: async (req: express.Request, res: express.Response) => {
-    try {
-      const result = await models.post.create({ text: req.body.text, postedBy: req.body.postedBy });
-      res.send(result);
-    } catch {
-    }
+  post: (req: express.Request, res: express.Response) => {
+    postMethods.createPost(req, res);
+  }
+}
+
+export const updatePost = {
+  post: (req: express.Request, res: express.Response) => {
+    postMethods.updatePost(req, res);
+  }
+}
+
+export const deletePost = {
+  post: (req: express.Request, res: express.Response) => {
+    postMethods.deletePost(req, res);
   }
 }

@@ -5,12 +5,12 @@ import { sessionHandler } from "./handlers/session-handler";
 import { passportHandler } from "./handlers/passport-handler";
 import { bodyParserHandler } from "./handlers/bodyParser-handler";
 import { cookieParserHandler } from "./handlers/cookieParser-handler"
-import { posts, currentPost, createPost } from "./routes/posts";
+import { posts, currentPost, createPost, updatePost, deletePost } from "./routes/posts";
 import { users, createUser, deleteUser, updateUser, login, logout } from "./routes/users";
 
 dotenv.config();
 
-const app = express();
+export const app = express();
 
 bodyParserHandler.init(app);
 cookieParserHandler.init(app);
@@ -25,6 +25,8 @@ connectDB()
 app.get('/', posts.get);
 app.get('/posts/:id', currentPost.get);
 app.post('/post/create', createPost.post);
+app.post('/post/update', updatePost.post);
+app.post('/post/delete', deletePost.post);
 
 app.get('/users', users.get);
 app.post('/login', login.post);
