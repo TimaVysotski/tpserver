@@ -3,7 +3,7 @@ import mongoose, {Schema, Document} from "mongoose";
 export interface IPost extends Document{
     id: string;
     text: string,
-    postedBy: string;
+    postedBy: string,
 }
 
 const PostSchema = new Schema({
@@ -12,8 +12,7 @@ const PostSchema = new Schema({
         required: true,
     },
     postedBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
+        type: String,
     }
 })
 

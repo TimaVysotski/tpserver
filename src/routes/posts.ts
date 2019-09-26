@@ -14,7 +14,7 @@ export const posts = {
 export const currentPost = {
   get: async (req: express.Request, res: express.Response) => {
     try {
-      const result = await models.post.findOne({'id': req.body.id});
+      const result = await models.post.findOne({ 'id': req.body.id });
       res.send(result);
     } catch {
     }
@@ -24,7 +24,7 @@ export const currentPost = {
 export const createPost = {
   post: async (req: express.Request, res: express.Response) => {
     try {
-      const result = await models.post.create({ text: req.body.text });
+      const result = await models.post.create({ text: req.body.text, postedBy: req.body.postedBy });
       res.send(result);
     } catch {
     }

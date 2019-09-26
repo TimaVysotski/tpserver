@@ -5,9 +5,8 @@ import { sessionHandler } from "./handlers/session-handler";
 import { passportHandler } from "./handlers/passport-handler";
 import { bodyParserHandler } from "./handlers/bodyParser-handler";
 import { cookieParserHandler } from "./handlers/cookieParser-handler"
-import { login, logout } from "./routes/auth";
 import { posts, currentPost, createPost } from "./routes/posts";
-import { users, createUser } from "./routes/users";
+import { users, createUser, deleteUser, updateUser, login, logout } from "./routes/users";
 
 dotenv.config();
 
@@ -23,10 +22,13 @@ connectDB()
     .catch(console.log);
 
 
-app.get('/posts', posts.get);
-app.get('/users', users.get);
+app.get('/', posts.get);
 app.get('/posts/:id', currentPost.get);
-app.post('/create/post', createPost.post);
-app.post('/create/user', createUser.post);
-app.post("/login", login.post);
-app.post("/logout", logout.post);
+app.post('/post/create', createPost.post);
+
+app.get('/users', users.get);
+app.post('/login', login.post);
+app.post('/logout', logout.post);
+app.post('/user/create', createUser.post);
+app.post('/user/delete', deleteUser.post);
+app.post('/user/update', updateUser.post);
