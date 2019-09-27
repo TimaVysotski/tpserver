@@ -1,8 +1,5 @@
 import express from "express";
 import models from "../models/index";
-import Post from "../logic/post";
-
-const postMethods = new Post;
 
 export default class User {
 
@@ -25,10 +22,9 @@ export default class User {
     const result = await models.user.findOne({ username: req.body.username });
     if (result) {
       if (result.isAuthenticated) {
-        models.user.findByIdAndDelete(result._id, (err, doc) => { 
-          if(err) return console.log(err);
-          postMethods.deleteAllPostOfUser(req, res);
-      });
+        models.user.findByIdAndDelete(result._id, (err, doc) => {
+          if (err) return console.log(err);
+        });
         res.send("successful");
       } else {
         res.send("Login before deleting");
@@ -75,7 +71,7 @@ export default class User {
     }
   }
 
-  async logout(req: express.Request, res: express.Response){
+  async logout(req: express.Request, res: express.Response) {
     const result = await models.user.findOne({ username: req.body.username });
     if (result) {
       if (result.isAuthenticated) {
@@ -91,4 +87,13 @@ export default class User {
     }
   }
 
+}
+
+export const checkAuthentication = async (id: string) => {
+  const result = await models.user.findOne({ _id: id });
+  if (result && result.isAuthenticated) {
+    return true
+  } else {
+    return false;
+  }
 }

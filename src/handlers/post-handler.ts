@@ -1,5 +1,6 @@
 import express from "express";
 import models from "../models/index";
+import checkcheckAuthentication, { checkAuthentication } from "../handlers/user-handler";
 
 export default class Post {
 
@@ -8,8 +9,8 @@ export default class Post {
     res.send(result);
   }
 
-  async showCurrentPost(req: express.Request, res: express.Response) {
-    const result = await models.post.findOne({ 'id': req.body.id });
+  async showCurrentPost({ body: id }: express.Request, res: express.Response) {
+    const result = await models.post.findOne({ 'id': id });
     res.send(result);
   }
 
@@ -24,7 +25,6 @@ export default class Post {
   async updatePost(req: express.Request, res: express.Response) {
     const result = await models.post.findOne({ _id: req.body.id });
     if (result) {
-      console.log(result);
       const currentUser = await models.user.findOne({ _id: result.postedBy });
       if (currentUser) {
         if (currentUser.isAuthenticated) {
@@ -43,26 +43,19 @@ export default class Post {
     } else {
       res.send("Check id of the post");
     }
+
+
+
   }
 
   async deletePost(req: express.Request, res: express.Response) {
     const result = await models.post.findOne({ _id: req.body.id });
-    if (result) {
-      const currentUser = await models.user.findOne({ _id: result.postedBy });
-      if (currentUser) {
-        if (currentUser.isAuthenticated) {
-          models.post.findByIdAndDelete(result._id, (err, doc) => {
-            if (err) return console.log(err);
-          });
-          res.send("success!!");
-        } else {
-          res.send("You need to login before deleting");
-        }
-      } else {
-        res.send("Issues with User");
-      }
+    if (result && checkAuthentication(result.postedBy)) {
+      models.post.findByIdAndDelete(result._id, (err, doc) => {
+        err ? console.log(err) : res.send("success");
+      });
     } else {
-      res.send("Check id of the post");
+      res.send("Error");
     }
   }
 

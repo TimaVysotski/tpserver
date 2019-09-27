@@ -1,5 +1,5 @@
 import express from "express";
-import Post from "../logic/post";
+import Post from "../handlers/post-handler";
 
 const postMethods = new Post;
 

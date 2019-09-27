@@ -1,5 +1,5 @@
 import express from "express";
-import User from "../logic/user";
+import User from "../handlers/user-handler";
 
 const userMethodes = new User;
 
