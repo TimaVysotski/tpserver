@@ -25,12 +25,12 @@ connectDB()
 app.get('/', posts.get);
 app.get('/posts/:id', currentPost.get);
 app.post('/post/create', createPost.post);
-app.post('/post/update', updatePost.post);
-app.post('/post/delete', deletePost.post);
+app.put('/post/update', updatePost.put);
+app.delete('/post/delete', deletePost.delete);
 
 app.get('/users', users.get);
 app.post('/login', login.post);
 app.post('/logout', logout.post);
 app.post('/user/create', createUser.post);
-app.post('/user/delete', deleteUser.post);
-app.post('/user/update', updateUser.post);
+app.delete('/user/delete', deleteUser.delete);
+app.put('/user/update', updateUser.put);

@@ -27,7 +27,7 @@ export default class Post {
       console.log(result);
       const currentUser = await models.user.findOne({ _id: result.postedBy });
       if (currentUser) {
-        if (currentUser.isAuthenticated == true) {
+        if (currentUser.isAuthenticated) {
           models.post.findByIdAndUpdate(result.id, {
             text: req.body.text
           }, { new: true }, (err, result) => {
@@ -50,7 +50,7 @@ export default class Post {
     if (result) {
       const currentUser = await models.user.findOne({ _id: result.postedBy });
       if (currentUser) {
-        if (currentUser.isAuthenticated == true) {
+        if (currentUser.isAuthenticated) {
           models.post.findByIdAndDelete(result._id, (err, doc) => {
             if (err) return console.log(err);
           });

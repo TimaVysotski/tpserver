@@ -24,7 +24,7 @@ export default class User {
   async deleteUser(req: express.Request, res: express.Response) {
     const result = await models.user.findOne({ username: req.body.username });
     if (result) {
-      if (result.isAuthenticated == true) {
+      if (result.isAuthenticated) {
         models.user.findByIdAndDelete(result._id, (err, doc) => { 
           if(err) return console.log(err);
           postMethods.deleteAllPostOfUser(req, res);
@@ -41,7 +41,7 @@ export default class User {
   async updateUser(req: express.Request, res: express.Response) {
     const result = await models.user.findOne({ _id: req.body.id });
     if (result) {
-      if (result.isAuthenticated == true) {
+      if (result.isAuthenticated) {
         models.user.findByIdAndUpdate(result.id, {
           username: req.body.username,
           password: req.body.password,
@@ -78,7 +78,7 @@ export default class User {
   async logout(req: express.Request, res: express.Response){
     const result = await models.user.findOne({ username: req.body.username });
     if (result) {
-      if (result.isAuthenticated == true) {
+      if (result.isAuthenticated) {
         models.user.updateOne({ _id: result.id }, { isAuthenticated: false }, (err, result) => {
           if (err) return console.log(err);
         });

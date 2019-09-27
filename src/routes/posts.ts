@@ -22,13 +22,13 @@ export const createPost = {
 }
 
 export const updatePost = {
-  post: (req: express.Request, res: express.Response) => {
+  put: (req: express.Request, res: express.Response) => {
     postMethods.updatePost(req, res);
   }
 }
 
 export const deletePost = {
-  post: (req: express.Request, res: express.Response) => {
+  delete: (req: express.Request, res: express.Response) => {
     postMethods.deletePost(req, res);
   }
 }

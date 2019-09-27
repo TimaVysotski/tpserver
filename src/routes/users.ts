@@ -28,13 +28,13 @@ export const logout = {
 }
 
 export const deleteUser = {
-  post: async (req: express.Request, res: express.Response) => {
+  delete: async (req: express.Request, res: express.Response) => {
     userMethodes.deleteUser(req, res);
   }
 }
 
 export const updateUser = {
-  post: async (req: express.Request, res: express.Response) => {
+  put: async (req: express.Request, res: express.Response) => {
     userMethodes.updateUser(req, res);
   }
 }
