@@ -1,8 +1,7 @@
 import express from "express";
 import models from "../models/index";
 import { checkAuthentication } from "../handlers/user-handler";
-import { MongoClient } from "mongodb";
-import { Mongoose } from "mongoose";
+
 
 interface UpdateRequest extends express.Request {
   body: {
@@ -67,17 +66,6 @@ export default class Post {
     } catch (error) {
       res.status(400).send({ message: error });
     }
-
-
-
-    // const result = await models.post.findOne({ _id });
-    // if (result && checkAuthentication(result.postedBy)) {
-    //   models.post.findByIdAndDelete(result._id, (err, doc) => {
-    //     err ? console.log(err) : res.send("success");
-    //   });
-    // } else {
-    //   res.send("Error");
-    // }
   }
 
   async deleteAllPostOfUser(req: express.Request, res: express.Response) {
