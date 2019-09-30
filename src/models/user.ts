@@ -1,37 +1,19 @@
-import mongoose, {Schema, Document} from "mongoose";
-
-export interface IUser extends Document {
-    username: string;
-    password: string;
-    gender: string;
-    id: string;
-}
+import mongoose, { Schema } from "mongoose";
+import { IUser } from "../interfaces/user";
 
 const UserSchema = new Schema({
-    username:{
+    username: {
         type: String,
         required: true,
         unique: true,
     },
-    password:{
+    password: {
         type: String,
         required: true,
     },
-    gender:{
+    gender: {
         type: String,
     }
-});
-
-UserSchema.statics.findByLogin = async function(username: string): Promise<IUser>  {
-    const user = await this.findOne({
-        username: username,
-    });
-
-    return user;
-}
-
-UserSchema.pre("remove", function(next): void {
-    this.model('Post').deleteMany({user: this._id}, next);
 });
 
 const user = mongoose.model<IUser>('User', UserSchema);

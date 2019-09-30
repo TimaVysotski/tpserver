@@ -1,87 +1,72 @@
 import express from "express";
 import models from "../models/index";
+import { UpdatedUserRequest } from "../interfaces/express";
 
 export default class User {
 
-  async showUsers(req: express.Request, res: express.Response) {
+  async createUser({ body: { username, password, gender } }: UpdatedUserRequest, res: express.Response) {
+    try {
+      const result = await models.user.create({
+        username: username,
+        password: password,
+        gender: gender,
+      });
+      res.send(result);
+    } catch (error) {
+      res.status(404).send(error);
+    }
+  }
+
+  async showUsers(req: UpdatedUserRequest, res: express.Response) {
     const result = await models.user.find();
     res.send(result);
   }
 
-  async createUser(req: express.Request, res: express.Response) {
-    const result = await models.user.create({
-      username: req.body.username,
-      password: req.body.password,
-      gender: req.body.gender
-    });
-    res.send(result);
-  }
   // CHEACK deleteAllPostOfUser
-  async deleteUser(req: express.Request, res: express.Response) {
-    const result = await models.user.findOne({ username: req.body.username });
-    if (result) {
-      
-        models.user.findByIdAndDelete(result._id, (err, doc) => {
-          if (err) return console.log(err);
-        });
-        res.send("successful");
-    } else {
-      res.send("such an account does not exist");
+  async deleteUser({ body: { id: _id } }: UpdatedUserRequest, res: express.Response) {
+    try {
+      await models.user.findOne({ _id }).remove();
+      res.redirect('/users');
+    } catch (error) {
+      res.status(404).send(error);
     }
   }
 
-  async updateUser(req: express.Request, res: express.Response) {
-    const result = await models.user.findOne({ _id: req.body.id });
-    if (result) {
-      
-        models.user.findByIdAndUpdate(result.id, {
-          username: req.body.username,
-          password: req.body.password,
-          gender: req.body.gender
-        }, { new: true }, (err, result) => {
-          if (err) return console.log(err);
-        });
-        res.send("Your account succesfully update");
-      
-    } else {
-      res.send("such an account does not exist");
+  async updateUser({ body: { id: _id, username, password, gender } }: express.Request, res: express.Response) {
+    try {
+      await models.user.findByIdAndUpdate(_id, {
+        username: username,
+        password: password,
+        gender: gender
+      });
+      res.redirect('/users');
+    } catch (error) {
+      res.status(404).send(error);
     }
   }
 
-  async login(req: express.Request, res: express.Response) {
-    const result = await models.user.findOne({ username: req.body.username });
-    if (result) {
-      if (result.password == req.body.password) {
-       
+  async login({ body: { username, password } }: UpdatedUserRequest, res: express.Response) {
+    try {
+      const result = await models.user.findOne({ username });
+      if (result && result.password == password) {
         res.redirect('/');
-        res.send("Successful login");
-      } else {
-        res.send("Check you password");
       }
-    } else {
-      res.send("Check your login");
+    } catch (error) {
+      res.status(404).send(error);
     }
+
   }
 
-  async logout(req: express.Request, res: express.Response) {
-    const result = await models.user.findOne({ username: req.body.username });
-    if (result) {
-      
-        
-        res.send("Successful logout");
-  
-    } else {
-      res.send("NO existing User");
+  async logout({ body: { username } }: UpdatedUserRequest, res: express.Response) {
+    try {
+      const result = await models.user.findOne({ username });
+      if (result && result.username == username) {
+        res.send("success")
+      }
+    } catch (error) {
+      res.status(404).send(error);
     }
   }
 
 }
 
-// export const checkAuthentication = async (id: string) => {
-//   const result = await models.user.findOne({ _id: id });
-//   if (result && result.isAuthenticated) {
-//     return true
-//   } else {
-//     return false;
-//   }
-// }
