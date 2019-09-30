@@ -1,35 +1,25 @@
 import express from "express";
 import models from "../models/index";
+import { UpdatedRequest } from "../interfaces/express";
 import { checkAuthentication } from "../handlers/user-handler";
 
 
-interface UpdateRequest extends express.Request {
-  body: {
-    id?: string;
-    text?: string;
-    postedBy?: string
-  };
-};
-
 export default class Post {
 
-  async showPosts(req: express.Request, res: express.Response) {
-    const result = await models.post.find();
-    res.send(result);
+  async showPosts(req: UpdatedRequest, res: express.Response) {
+    res.send(await models.post.find());
   }
 
-  async showCurrentPost({ body: id }: express.Request, res: express.Response) {
-    const result = await models.post.findOne({ id });
-    res.send(result);
-  }
-  
-
-  async createPost({ body }: UpdateRequest, res: express.Response) {
-    const result = await models.post.create(body);
-    res.send(result);
+  async showCurrentPost({ body: id }: UpdatedRequest, res: express.Response) {
+    res.send(await models.post.findOne({ id }));
   }
 
-  async updatePost({ body: { id : _id, text, postedBy } }: UpdateRequest, res: express.Response) {
+
+  async createPost({ body }: UpdatedRequest, res: express.Response) {
+    res.send(await models.post.create(body));
+  }
+
+  async updatePost({ body: { id: _id, text, postedBy } }: UpdatedRequest, res: express.Response) {
     const result = await models.post.findOne({ _id });
 
     if (result && checkAuthentication(result.postedBy)) {
@@ -43,15 +33,15 @@ export default class Post {
     }
   }
 
-  notEmpty(...params : Array<any>){
+  notEmpty(...params: Array<any>) {
     params.forEach(it => {
-      if (!it){
+      if (!it) {
         throw 'empty param';
       }
     })
   }
 
-  async deletePost({ body: { id } }: UpdateRequest, res: express.Response) {
+  async deletePost({ body: { id } }: UpdatedRequest, res: express.Response) {
     try {
       this.notEmpty(id);
 
@@ -67,10 +57,4 @@ export default class Post {
       res.status(400).send({ message: error });
     }
   }
-
-  async deleteAllPostOfUser(req: express.Request, res: express.Response) {
-    await models.post.remove({ postedBy: req.body.id });
-    res.send("All posts was deleted successfully");
-  }
-
 }

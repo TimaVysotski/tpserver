@@ -1,11 +1,11 @@
 import express from "express";
 import models from "../models/index";
+import { UpdatedRequest } from "../interfaces/express";
 
 export default class User {
 
-  async showUsers(req: express.Request, res: express.Response) {
-    const result = await models.user.find();
-    res.send(result);
+  async showUsers(req: UpdatedRequest, res: express.Response) {
+    res.send(await models.user.find());
   }
 
   async createUser(req: express.Request, res: express.Response) {
@@ -18,8 +18,8 @@ export default class User {
     res.send(result);
   }
   // CHEACK deleteAllPostOfUser
-  async deleteUser(req: express.Request, res: express.Response) {
-    const result = await models.user.findOne({ username: req.body.username });
+  async deleteUser({ body: { id: _id } }: UpdatedRequest, res: express.Response) {
+    const result = await models.user.findOne({ _id });
     if (result) {
       if (result.isAuthenticated) {
         models.user.findByIdAndDelete(result._id, (err, doc) => {
@@ -34,17 +34,11 @@ export default class User {
     }
   }
 
-  async updateUser(req: express.Request, res: express.Response) {
-    const result = await models.user.findOne({ _id: req.body.id });
+  async updateUser({ body: { id: _id, username, gender } }: UpdatedRequest, res: express.Response) {
+    const result = await models.user.findOne({ _id });
     if (result) {
       if (result.isAuthenticated) {
-        models.user.findByIdAndUpdate(result.id, {
-          username: req.body.username,
-          password: req.body.password,
-          gender: req.body.gender
-        }, { new: true }, (err, result) => {
-          if (err) return console.log(err);
-        });
+        models.user.findByIdAndUpdate(result.id, { body: { username, gender } }, { new: true });
         res.send("Your account succesfully update");
       } else {
         res.send("Login before updating");
@@ -54,22 +48,23 @@ export default class User {
     }
   }
 
-  async login(req: express.Request, res: express.Response) {
-    const result = await models.user.findOne({ username: req.body.username });
-    if (result) {
-      if (result.password == req.body.password) {
-        models.user.updateOne({ _id: result.id }, { isAuthenticated: true }, (err, result) => {
-          if (err) return console.log(err);
-        });
-        res.redirect('/');
-        res.send("Successful login");
-      } else {
-        res.send("Check you password");
-      }
-    } else {
-      res.send("Check your login");
-    }
-  }
+  // async login({ body: { email, password } }: UpdatedRequest, res: express.Response) {
+  //   const result = await models.user.findOne({ email });
+  //   if (result) {
+  //     if (result.password == {password}) {
+  //       models.user.updateOne({ _id: result.id }, { isAuthenticated: true }, (err, result) => {
+  //         if (err) return console.log(err);
+  //       });
+  //       res.redirect('/');
+  //       res.send("Successful login");
+  //     } else {
+  //       res.send("Check you password");
+  //     }
+  //   } else {
+  //     res.send("Check your login");
+  //   }
+  // }
+
 
   async logout(req: express.Request, res: express.Response) {
     const result = await models.user.findOne({ username: req.body.username });

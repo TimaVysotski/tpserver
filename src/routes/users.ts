@@ -17,7 +17,7 @@ export const createUser = {
 
 export const login = {
   post: async (req: express.Request, res: express.Response) => {
-    userMethodes.login(req, res);
+    //userMethodes.login(req, res);
   }
 }
 
