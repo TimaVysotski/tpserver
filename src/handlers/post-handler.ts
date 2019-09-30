@@ -1,6 +1,5 @@
 import express from "express";
 import models from "../models/index";
-import checkcheckAuthentication, { checkAuthentication } from "../handlers/user-handler";
 
 export default class Post {
 
@@ -27,16 +26,14 @@ export default class Post {
     if (result) {
       const currentUser = await models.user.findOne({ _id: result.postedBy });
       if (currentUser) {
-        if (currentUser.isAuthenticated) {
-          models.post.findByIdAndUpdate(result.id, {
-            text: req.body.text
-          }, { new: true }, (err, result) => {
-            if (err) return console.log(err);
-          });
-          res.send("success!!");
-        } else {
-          res.send("You need to login before updating");
-        }
+
+        models.post.findByIdAndUpdate(result.id, {
+          text: req.body.text
+        }, { new: true }, (err, result) => {
+          if (err) return console.log(err);
+        });
+        res.send("success!!");
+
       } else {
         res.send("Issues with User");
       }
@@ -50,7 +47,7 @@ export default class Post {
 
   async deletePost(req: express.Request, res: express.Response) {
     const result = await models.post.findOne({ _id: req.body.id });
-    if (result && checkAuthentication(result.postedBy)) {
+    if (result) {
       models.post.findByIdAndDelete(result._id, (err, doc) => {
         err ? console.log(err) : res.send("success");
       });
