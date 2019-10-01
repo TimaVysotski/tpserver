@@ -4,31 +4,40 @@ import Post from "../handlers/post-handler";
 const postMethods = new Post;
 
 export const posts = {
-  get: (req: express.Request, res: express.Response) => {
-    postMethods.showPosts(req, res);
+  get: async (req: express.Request, res: express.Response) => {
+    const result = await postMethods.getPosts();
+    res.send(result);
   }
 }
 
 export const currentPost = {
-  get: (req: express.Request, res: express.Response) => {
-    postMethods.showCurrentPost(req, res);
+  get: async (req: express.Request, res: express.Response) => {
+    const result = await postMethods.showCurrentPost(req);
+    res.send(result);
   }
 }
 
 export const createPost = {
-  post: (req: express.Request, res: express.Response) => {
-    postMethods.createPost(req, res);
+  post: async (req: express.Request, res: express.Response) => {
+    const result = await postMethods.createPost(req);
+    res.send(result);
   }
 }
 
 export const updatePost = {
-  put: (req: express.Request, res: express.Response) => {
-    postMethods.updatePost(req, res);
+  put: async (req: express.Request, res: express.Response) => {
+    const result = await postMethods.updatePost(req);
+    res.send(result);
   }
 }
 
 export const deletePost = {
-  delete: (req: express.Request, res: express.Response) => {
-    postMethods.deletePost(req, res);
+  delete: async (req: express.Request, res: express.Response) => {
+    try {
+      await postMethods.deletePost(req);
+      res.redirect('/');
+    } catch (error) {
+      res.status(404).send(error);
+    }
   }
 }

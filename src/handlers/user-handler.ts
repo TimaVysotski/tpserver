@@ -1,70 +1,66 @@
 import express from "express";
 import models from "../models/index";
 import { UpdatedUserRequest } from "../interfaces/express";
+import ValidationHandler from "../handlers/validation-handler";
+
+const validation = new ValidationHandler();
 
 export default class User {
 
-  async createUser({ body: { username, password, gender } }: UpdatedUserRequest, res: express.Response) {
+  async createUser({ body }: UpdatedUserRequest) {
     try {
-      const result = await models.user.create({
-        username: username,
-        password: password,
-        gender: gender,
-      });
-      res.send(result);
+      //validation.notEmpty(...body);
+      const result = await models.user.create(body);
+      return result;
     } catch (error) {
-      res.status(404).send(error);
+      return error;
     }
   }
 
-  async showUsers(req: UpdatedUserRequest, res: express.Response) {
+  async getUsers(req: UpdatedUserRequest) {
     const result = await models.user.find();
-    res.send(result);
+   return result;
   }
 
   // CHEACK deleteAllPostOfUser
-  async deleteUser({ body: { id: _id } }: UpdatedUserRequest, res: express.Response) {
+  async deleteUser({ body: { id: _id } }: UpdatedUserRequest) {
     try {
       await models.user.findOne({ _id }).remove();
-      res.redirect('/users');
+      return "success"
     } catch (error) {
-      res.status(404).send(error);
+      return error;
     }
   }
 
-  async updateUser({ body: { id: _id, username, password, gender } }: express.Request, res: express.Response) {
+  async updateUser({ body }: express.Request) {
     try {
-      await models.user.findByIdAndUpdate(_id, {
-        username: username,
-        password: password,
-        gender: gender
-      });
-      res.redirect('/users');
+      const result = await models.user.findByIdAndUpdate(body.id, body);
+      return result;
     } catch (error) {
-      res.status(404).send(error);
+      return error;
     }
   }
 
-  async login({ body: { username, password } }: UpdatedUserRequest, res: express.Response) {
+  async login({ body: { username, password } }: UpdatedUserRequest) {
     try {
       const result = await models.user.findOne({ username });
       if (result && result.password == password) {
-        res.redirect('/');
+        return result;
       }
     } catch (error) {
-      res.status(404).send(error);
+      return error;
     }
 
   }
 
-  async logout({ body: { username } }: UpdatedUserRequest, res: express.Response) {
+  async logout({ body: { username } }: UpdatedUserRequest) {
     try {
       const result = await models.user.findOne({ username });
       if (result && result.username == username) {
-        res.send("success")
+        return "success";
       }
     } catch (error) {
-      res.status(404).send(error);
+      return error;
     }
   }
 

@@ -4,45 +4,39 @@ import { UpdatedPostRequest } from "../interfaces/express";
 
 export default class Post {
 
-  async showPosts(req: express.Request, res: express.Response) {
+  async getPosts() {
     const result = await models.post.find();
-    res.send(result);
+    return result;
   }
 
-  async showCurrentPost({ body: id }: UpdatedPostRequest, res: express.Response) {
-    const result = await models.post.findOne({ id });
-    res.send(result);
+  async showCurrentPost({ body: { id: _id } }: UpdatedPostRequest) {
+    const result = await models.post.findOne({ _id });
+    return result;
   }
 
-  async createPost({ body: { text, postedBy } }: UpdatedPostRequest, res: express.Response) {
+  async createPost({ body }: UpdatedPostRequest) {
     try {
-      await models.post.create({
-        text: text,
-        postedBy: postedBy
-      });
-      res.redirect('/');
+      const result = await models.post.create(body);
+      return result;
     } catch (error) {
-      res.status(404).send(error);
+      return error;
     }
   }
 
-  async updatePost({ body: { id: _id, text } }: express.Request, res: express.Response) {
+  async updatePost({ body }: express.Request) {
     try {
-      await models.post.findByIdAndUpdate(_id, {
-        text: text
-      })
-      res.redirect('/');
+      const result = await models.post.findByIdAndUpdate(body.id, body)
+      return result;
     } catch (error) {
-      res.status(404).send(error);
+      return error;
     }
   }
 
-  async deletePost({ body: { id: _id } }: express.Request, res: express.Response) {
+  async deletePost({ body: { id: _id } }: UpdatedPostRequest) {
     try {
       await models.post.findOne({ _id }).remove();
-      res.redirect('/');
     } catch (error) {
-      res.status(404).send(error);
+      return error;
     }
   }
 }

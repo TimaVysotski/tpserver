@@ -9,7 +9,6 @@ const connectDB = () => {
         throw 'DataBase connecting error';
     }
     return mongoose.connect(DATABASE_URL);
-    //return mongoose.connect(process.env.DATABASE_URL);
 };
 
 const models = { user, post };
