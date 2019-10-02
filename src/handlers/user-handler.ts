@@ -2,13 +2,15 @@ import express from "express";
 import models from "../models/index";
 import { UpdatedUserRequest } from "../interfaces/express";
 import { Validation } from "../handlers/validation-handler";
+import { Middelware } from "../middleware/index";
 
 export default class User {
 
   async createUser({ body }: UpdatedUserRequest) {
     try {
       Validation.notEmpty(body);
-      Validation.correctParameters(body);
+      Validation.checkForValidUserData(body);
+      body.password = await Middelware.createHash(body.password);
       const result = await models.user.create(body);
       return result;
     } catch (error) {
@@ -46,8 +48,11 @@ export default class User {
     try {
       Validation.notEmpty({ username, password });
       const result = await models.user.findOne({ username });
-      if (result && result.password == password) {
+      const authentication = await Middelware.checkPassword(result, password);
+      if (authentication) {
         return result;
+      } else {
+        throw `Error! Invalid password.`;
       }
     } catch (error) {
       return error;
