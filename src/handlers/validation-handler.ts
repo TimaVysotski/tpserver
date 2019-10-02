@@ -12,9 +12,9 @@ export const Validation = {
             }
         });
     },
-    checkForValidUserData({ body: { username, password, gender } }: any) {
-        if (!Object.values(Gender).includes(gender)) {
+    checkForValidUserData(body: any) {
+        if (!Object.values(Gender).includes(body.gender)) {
             throw `Error!!! Invalid Gender data.`;
         }
-    },
+    }
 }
