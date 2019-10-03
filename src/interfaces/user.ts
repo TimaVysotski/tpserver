@@ -6,3 +6,11 @@ export interface IUser extends Document {
     gender?: string;
     id?: string;
 }
+
+export interface UserInterface {
+    username?: string;
+    password?: string;
+    gender?: string;
+    _id?: string;
+    [key : string]: any;
+}

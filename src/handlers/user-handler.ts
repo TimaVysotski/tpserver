@@ -26,7 +26,7 @@ export default class User {
   // CHEACK deleteAllPostOfUser
   async deleteUser({ body: { id: _id } }: UpdatedUserRequest) {
     try {
-      Validation.notEmpty(_id);
+      Validation.notEmpty({ _id });
       await models.user.findOne({ _id }).remove();
       return "success"
     } catch (error) {
@@ -62,7 +62,7 @@ export default class User {
 
   async logout({ body: { username } }: UpdatedUserRequest) {
     try {
-      Validation.notEmpty(username);
+      Validation.notEmpty({ username });
       const result = await models.user.findOne({ username });
       if (result && result.username == username) {
         return "success";
@@ -73,4 +73,3 @@ export default class User {
   }
 
 }
-

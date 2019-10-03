@@ -19,13 +19,13 @@ connectDB()
 
 app.get('/', posts.get);
 app.get('/posts/:id', currentPost.get);
-app.post('/post/create', createPost.post);
-app.put('/post/update', updatePost.put);
-app.delete('/post/delete', deletePost.delete);
+app.post('/post', createPost.post);
+app.put('/post', updatePost.put);
+app.delete('/post', deletePost.delete);
 
 app.get('/users', users.get);
 app.post('/login', login.post);
 app.post('/logout', logout.post);
-app.post('/user/create', createUser.post);
-app.delete('/user/delete', deleteUser.delete);
-app.put('/user/update', updateUser.put);
+app.post('/user', createUser.post);
+app.delete('/user', deleteUser.delete);
+app.put('/user', updateUser.put);
