@@ -1,7 +1,7 @@
 import app from "./EpressAplication";
 import connectDB from "./db/config";
 import { posts, currentPost, createPost, updatePost, deletePost } from "./routes/posts";
-import userRoutes from "./routes/users";
+import userRoutes from "./routes/userRoutes";
 
 connectDB()
     .then(() => app.listen(process.env.PORT))
