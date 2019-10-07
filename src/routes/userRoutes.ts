@@ -1,25 +1,49 @@
-import express from "express";
-import User from "../Services/UserService";
+import express, { Router } from "express";
+import UserController from "../controllers/UserController";
+import { STATUS_OK, STATUS_NOT_FOUND, SUCCESS } from "../constants/api";
 
-const userMethodes = new User();
 
-const userRoutes = {
-  post: async (req: express.Request, res: express.Response) => {
-    const result = await userMethodes.create(req);
-    res.send(result);
-  },
-  get: async (req: express.Request, res: express.Response) => {
-    const result = await userMethodes.get(req);
-    res.send(result);
-  },
-  delete: async (req: express.Request, res: express.Response) => {
-    const result = await userMethodes.delete(req);
-    return result;
-  },
-  put: async (req: express.Request, res: express.Response) => {
-    const result = await userMethodes.update(req);
-    return result;
+class UserRoutes {
+  private controller: UserController;
+  readonly router: express.Router;
+
+  constructor() {
+    this.controller = new UserController();
+    this.router = Router();
+    this.initRoutes();
   }
+
+  public initRoutes(): void {
+    this.router.get("/", (req: express.Request, res: express.Response) => {
+      this.controller.findAll()
+        .then(users => res.status(STATUS_OK).send(users))
+        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    });
+
+    this.router.get("/:id", ({ params: { id } }: express.Request, res: express.Response) => {
+      this.controller.findById(id)
+        .then(user => res.status(STATUS_OK).send(user))
+        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    });
+
+    this.router.post("/", ({ body }: express.Request, res: express.Response) => {
+      this.controller.create(body)
+        .then(user => res.status(STATUS_OK).send(user))
+        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    });
+
+    this.router.put("/", ({ body }: express.Request, res: express.Response) => {
+      this.controller.update(body)
+      .then(user => res.status(STATUS_OK).send(user))
+      .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    });
+
+    this.router.delete("/:id", (req: express.Request, res: express.Response) => {
+      this.controller.delete(req.params.id)
+      .then(() => res.status(STATUS_OK).send(SUCCESS))
+      .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    });
+  };
 }
 
-export default userRoutes;
+export default new UserRoutes().router;

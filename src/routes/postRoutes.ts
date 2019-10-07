@@ -1,29 +1,48 @@
-import express from "express";
-import PostService from "../Services/PostService";
+import express, { Router } from "express";
+import PostController from "../controllers/PostController";
+import { STATUS_OK, STATUS_NOT_FOUND, SUCCESS } from "../constants/api";
 
-const postMethods = new PostService();
+class PostRoutes {
+  private controller: PostController;
+  readonly router: express.Router;
 
-const postRoutes = {
-  get: async (req: express.Request, res: express.Response) => {
-    const result = await postMethods.get(req);
-    res.send(result);
-  },
-  post: async (req: express.Request, res: express.Response) => {
-    const result = await postMethods.create(req);
-    res.send(result);
-  },
-  put: async (req: express.Request, res: express.Response) => {
-    const result = await postMethods.update(req);
-    res.send(result);
-  },
-  delete: async (req: express.Request, res: express.Response) => {
-    try {
-      await postMethods.delete(req);
-      res.redirect('/');
-    } catch (error) {
-      res.status(404).send(error);
-    }
+  constructor() {
+    this.controller = new PostController();
+    this.router = Router();
+    this.initRoutes();
   }
+
+  initRoutes(): void {
+    this.router.get("/", (req: express.Request, res: express.Response) => {
+      this.controller.findAll()
+        .then(posts => res.status(STATUS_OK).send(posts))
+        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    });
+
+    this.router.get("/:id", ({ params: { id } }: express.Request, res: express.Response) => {
+      this.controller.findById(id)
+        .then(post => res.status(STATUS_OK).send(post))
+        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    });
+
+    this.router.post("/", ({ body }: express.Request, res: express.Response) => {
+      this.controller.create(body)
+        .then(post => res.status(STATUS_OK).send(post))
+        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    });
+
+    this.router.put("/", ({ body }: express.Request, res: express.Response) => {
+      this.controller.update(body)
+      .then(post => res.status(STATUS_OK).send(post))
+      .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    });
+
+    this.router.delete("/:id", (req: express.Request, res: express.Response) => {
+      this.controller.delete(req.params.id)
+      .then(() => res.status(STATUS_OK).send(SUCCESS))
+      .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    });
+  };
 }
 
-export default postRoutes;
+export default new PostRoutes().router;

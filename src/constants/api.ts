@@ -3,3 +3,7 @@ export const API_ROUTES = {
     USER_API: "/api/user",
     POST_API: "/api/post",
 };
+
+export const STATUS_OK = 200;
+export const STATUS_NOT_FOUND = 404;
+export const SUCCESS = "Success!";
