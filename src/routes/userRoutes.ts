@@ -1,39 +1,25 @@
 import express from "express";
 import User from "../Services/UserService";
 
-const userMethodes = new User;
+const userMethodes = new User();
 
 const userRoutes = {
   post: async (req: express.Request, res: express.Response) => {
-    const result = await userMethodes.createUser(req);
+    const result = await userMethodes.create(req);
     res.send(result);
   },
   get: async (req: express.Request, res: express.Response) => {
-    const result = await userMethodes.getUsers(req);
+    const result = await userMethodes.get(req);
     res.send(result);
   },
   delete: async (req: express.Request, res: express.Response) => {
-    const result = await userMethodes.deleteUser(req);
+    const result = await userMethodes.delete(req);
     return result;
   },
   put: async (req: express.Request, res: express.Response) => {
-    const result = await userMethodes.updateUser(req);
+    const result = await userMethodes.update(req);
     return result;
   }
 }
 
 export default userRoutes;
-
-// export const login = {
-//   post: async (req: express.Request, res: express.Response) => {
-//     const result = await userMethodes.login(req);
-//     res.send(result);
-//   }
-// }
-
-// export const logout = {
-//   post: async (req: express.Request, res: express.Response) => {
-//     const result = await userMethodes.logout(req);
-//     return result;
-//   }
-// }

@@ -7,7 +7,7 @@ export interface IUser extends Document {
     id?: string;
 }
 
-export interface UserInterface {
+export interface IUserBase {
     username?: string;
     password?: string;
     gender?: string;

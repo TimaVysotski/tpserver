@@ -2,15 +2,15 @@ import express from "express";
 import models from "../models/index";
 import { UpdatedUserRequest } from "../interfaces/express";
 import { Validation } from "../handlers/validation-handler";
-import { Middelware } from "../middleware/index";
+import { BcryptMiddelware } from "../middleware/bcrypt";
 
 export default class User {
 
-  async createUser({ body }: UpdatedUserRequest) {
+  async create({ body }: UpdatedUserRequest) {
     try {
       Validation.notEmpty(body);
       Validation.checkForValidUserData(body);
-      body.password = await Middelware.createHash(body.password);
+      body.password = await BcryptMiddelware.createHash(body.password);
       const result = await models.user.create(body);
       return result;
     } catch (error) {
@@ -18,13 +18,13 @@ export default class User {
     }
   }
 
-  async getUsers(req: UpdatedUserRequest) {
+  async get(req: UpdatedUserRequest) {
     const result = await models.user.find();
     return result;
   }
 
   // CHEACK deleteAllPostOfUser
-  async deleteUser({ body: { id: _id } }: UpdatedUserRequest) {
+  async delete({ body: { id: _id } }: UpdatedUserRequest) {
     try {
       Validation.notEmpty({ _id });
       await models.user.findOne({ _id }).remove();
@@ -34,7 +34,7 @@ export default class User {
     }
   }
 
-  async updateUser({ body }: express.Request) {
+  async update({ body }: express.Request) {
     try {
       Validation.notEmpty(body);
       const result = await models.user.findByIdAndUpdate(body.id, body);
@@ -48,7 +48,7 @@ export default class User {
     try {
       Validation.notEmpty({ username, password });
       const result = await models.user.findOne({ username });
-      const authentication = await Middelware.checkPassword(result, password);
+      const authentication = await BcryptMiddelware.checkPassword(result, password);
       if (authentication) {
         return result;
       } else {

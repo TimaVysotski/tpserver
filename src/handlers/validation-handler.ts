@@ -1,8 +1,8 @@
 import { Gender, validPassword, validUsername } from "../constants/validation";
-import { UserInterface } from "../interfaces/user";
+import { IUserBase } from "../interfaces/user";
 
 export const Validation = {
-    notEmpty(body: UserInterface) {
+    notEmpty(body: IUserBase) {
         Object.keys(body).forEach((property: string ) => {
             if (!property) {
                 throw `Request can not be consist of empty key.`;
@@ -12,7 +12,7 @@ export const Validation = {
             }
         });
     },
-    checkForValidUserData( body : UserInterface) {
+    checkForValidUserData( body : IUserBase) {
         try {
             this.checkUserUsername(body.username);
             this.checkUserPassword(body.password);
