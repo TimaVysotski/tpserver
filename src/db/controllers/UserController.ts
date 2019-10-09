@@ -47,14 +47,14 @@ class UserController {
                 .catch(error => reject(error));
         });
     };
-    checkCredentials = (body: IUser) => {
+    checkCredentials = (body: IUser): Promise<IUser> => {
         return new Promise((resolve, reject) => {
             models.user.findOne({ username: body.username })
                 .then(user => {
                     BcryptMiddelware.checkPassword(user!, body.password!)
                         .then((result) => {
                             if (result) {
-                                resolve(user);
+                                resolve(user!);
                             } else {
                                 throw CREDENTIALS_ERROR;
                             }

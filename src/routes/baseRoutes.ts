@@ -6,6 +6,9 @@ import { API_ROUTES } from "../constants/api";
 
 const configurateRoutes = {
     init: (app: express.Application) => {
+        // app.use("/api", (req: express.Request, res: express.Response, next: express.NextFunction) => {
+
+        // });
         app.use(API_ROUTES.USER_API, UserRoutes);
         app.use(API_ROUTES.SIGN_API, SignRoutes);
         app.use(API_ROUTES.POST_API, PostRoutes);

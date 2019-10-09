@@ -1,5 +1,5 @@
 const JWT_CONFIG = {
-    JWT_SECRET: "JWT_SECRET",
+    JWT_SECRET: "ITSJUSTACIGARETTE",
     JWT_OPTIONS: { expiresIn: 60 * 60 },
 };
 
