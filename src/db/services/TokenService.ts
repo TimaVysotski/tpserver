@@ -1,14 +1,13 @@
-import models from "../../models/index";
-import { IUser } from "../../interfaces/user";
+import { IToken } from "../../interfaces/token";
+import models from "../../models";
 
 class TokenService {
-    save = (user: IUser, token: string) => {
-        user.token = token;
-        return user.token;
-    };
-    delete = (user: IUser) => {
-        user.token = undefined;
-        return user;
+    save = (token: IToken) => {
+        return new Promise((resolve, reject) => {
+            models.token.create(token)
+            .then(token => resolve(token))
+            .catch(error => reject(error));
+        });
     };
 }
 

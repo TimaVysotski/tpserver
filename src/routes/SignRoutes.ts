@@ -13,8 +13,7 @@ class SignRoutes {
     }
 
     initRoutes(): void {
-        this.router.post("/", ({ body, headers }: express.Request, res: express.Response) => {
-            console.log(headers);
+        this.router.post("/", ({ body }: express.Request, res: express.Response) => {
             this.controller.login(body)
                 .then(token => res.status(STATUS_OK).send(token))
                 .catch(error => res.status(STATUS_NOT_FOUND).send(error));
@@ -22,8 +21,8 @@ class SignRoutes {
 
         this.router.delete("/", ({ body }: express.Request, res: express.Response) => {
             this.controller.logout(body)
-            .then(user => res.status(STATUS_OK).send(user))
-            .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+                .then(user => res.status(STATUS_OK).send(user))
+                .catch(error => res.status(STATUS_NOT_FOUND).send(error));
         });
     }
 };
