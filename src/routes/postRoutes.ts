@@ -1,6 +1,6 @@
 import express, { Router } from "express";
-import PostController from "../controllers/PostController";
-import { STATUS_OK, STATUS_NOT_FOUND, SUCCESS } from "../constants/api";
+import PostController from "../db/controllers/PostController";
+import { STATUS_OK, STATUS_NOT_FOUND } from "../constants/api";
 
 class PostRoutes {
   private controller: PostController;
@@ -33,16 +33,16 @@ class PostRoutes {
 
     this.router.put("/", ({ body }: express.Request, res: express.Response) => {
       this.controller.update(body)
-      .then(post => res.status(STATUS_OK).send(post))
-      .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+        .then(post => res.status(STATUS_OK).send(post))
+        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });
 
     this.router.delete("/:id", (req: express.Request, res: express.Response) => {
       this.controller.delete(req.params.id)
-      .then(() => res.status(STATUS_OK).send(SUCCESS))
-      .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+        .then(() => res.status(STATUS_OK))
+        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });
   };
-}
+};
 
 export default new PostRoutes().router;

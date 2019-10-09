@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
 import { IUserBase } from "../interfaces/user";
-import { JWT_CONFIG } from "../constants/secure";
+import JWT_CONFIG from "../constants/jwtSecure";
 
 
 class JwtMiddelware {
-    static encrypt = (string: string) => string;
-    static getToken = (user: IUserBase) => jwt.sign({id: user._id}, JWT_CONFIG.JWT_SECRET, JWT_CONFIG.JWT_OPTIONS);
+    static encrypt = (string: string) => { string };
+    static getToken = (user: IUserBase) => { jwt.sign({ id: user._id }, JWT_CONFIG.JWT_SECRET, JWT_CONFIG.JWT_OPTIONS) };
 };
 
-export default { JwtMiddelware };
+export default JwtMiddelware;

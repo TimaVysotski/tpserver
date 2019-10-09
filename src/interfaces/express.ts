@@ -8,7 +8,6 @@ export interface UpdatedPostRequest extends express.Request {
     }
 }
 
-
 export interface UpdatedUserRequest extends express.Request {
     body: {
         username?: string,
@@ -16,4 +15,5 @@ export interface UpdatedUserRequest extends express.Request {
         gender?: string,
         id?: string,
     }
+    [x: string]: any;
 }

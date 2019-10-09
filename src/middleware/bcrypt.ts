@@ -1,10 +1,15 @@
 import bcrypt from "bcrypt";
+import { IUserBase } from "../interfaces/user";
+import { CREDENTIALS_ERROR } from "../constants/api";
 
-export const BcryptMiddelware = {
-    async createHash(password: any) {
-        return await bcrypt.hash(password, Number(process.env.SALT_ROUNDS));
+const BcryptMiddelware = {
+    createHash(password: string) {
+        return bcrypt.hash(password, Number(process.env.SALT_ROUNDSs));
     },
-    async checkPassword(body: any, password: any) {
-        return await bcrypt.compare(password, body.password);
+    async checkPassword(user: IUserBase, password: string) {
+        const result = bcrypt.compare(password, user.password!);
+        if (result) { return result; } else { throw CREDENTIALS_ERROR; }
     },
 }
+
+export default BcryptMiddelware;

@@ -3,4 +3,4 @@ const JWT_CONFIG = {
     JWT_OPTIONS: { expiresIn: 60 * 60 },
 };
 
-export { JWT_CONFIG };
+export default JWT_CONFIG;

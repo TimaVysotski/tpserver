@@ -5,6 +5,7 @@ export interface IUser extends Document {
     password?: string;
     gender?: string;
     id?: string;
+    token?: string;
 }
 
 export interface IUserBase {
@@ -12,5 +13,6 @@ export interface IUserBase {
     password?: string;
     gender?: string;
     _id?: string;
+    token?: string;
     [key : string]: any;
 }
