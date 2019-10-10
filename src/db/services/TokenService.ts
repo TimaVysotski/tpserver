@@ -1,7 +1,5 @@
 import { IToken } from "../../interfaces/token";
 import models from "../../models";
-import { resolve } from "url";
-import { IUser } from "../../interfaces/user";
 
 class TokenService {
     save = (token: IToken) => {
@@ -14,7 +12,7 @@ class TokenService {
     delete = ({ token }: IToken) => {
         return new Promise((resolve, reject) => {
             models.token.findOneAndRemove({ token })
-                .then(() => resolve())
+                .then(() => resolve("true"))
                 .catch(error => reject(error));
         });
     }

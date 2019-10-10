@@ -1,54 +1,13 @@
-import UserController from "./UserController";
-import { IUser } from "../../interfaces/user";
-import TokenService from "../services/TokenService";
-import JwtMiddelware from "../../middleware/JwtMiddelware";
-import { IToken } from "../../interfaces/token";
-import models from "../../models";
+import models from "../../models/index";
+import { UpdatedUserRequest } from "../../interfaces/express";
 
 class SignController {
-    private controller: UserController;
-    private middelware: JwtMiddelware;
-    private tokenService: TokenService;
-
-
-    constructor() {
-        this.controller = new UserController();
-        this.middelware = new JwtMiddelware();
-        this.tokenService = new TokenService();
-    }
-
-    login = (body: IUser) => {
+    create = (body: UpdatedUserRequest) => {
         return new Promise((resolve, reject) => {
-            try {
-                this.controller.checkCredentials(body)
-                    .then(user => {
-                        try {
-                            const token = this.tokenService.save({
-                                user: user,
-                                token: this.middelware.getToken(user)
-                            } as IToken);
-                            resolve(token);
-                        } catch (error) {
-                            reject(error);
-                        }
-                    })
-                    .catch(error => reject(error));
-            } catch (error) {
-                reject(error);
-            }
-        });
-    };
-
-    logout = (id: string) => {
-        return new Promise((resolve, reject) => {
-            models.token.findOne({user: id})
-            .then(token => {
-                this.tokenService.delete(token as IToken);
-                resolve();
-            })
-            .catch(error => reject(error));
+            models.user.create(body)
+                .then(user => resolve(user))
+                .catch(error => reject(error));
         });
     };
 }
-
 export default SignController;

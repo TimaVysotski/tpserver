@@ -1,4 +1,4 @@
-import { Gender, validPassword, validUsername } from "../constants/validation";
+import { Gender, validPassword, validUsername, validEmail } from "../constants/validation";
 import { IUserBase } from "../interfaces/user";
 
 export const Validation = {
@@ -12,13 +12,20 @@ export const Validation = {
             }
         });
     },
-    checkForValidUserData( body : IUserBase) {
+    checkUserData( body : IUserBase) {
         try {
+            this.checkUserEmail(body.email);
             this.checkUserUsername(body.username);
             this.checkUserPassword(body.password);
             this.checkUserGender(body.gender);
+            return body;
         } catch (error) {
             throw `Error!!! Check ${error} data!`;
+        }
+    },
+    checkUserEmail(email?: string) {
+        if (!email || validEmail.test(email)) {
+            throw "email";
         }
     },
     checkUserUsername(username?: string) {

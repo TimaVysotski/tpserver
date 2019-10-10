@@ -1,8 +1,9 @@
 export const API_ROUTES = {
     API: "/api",
+    REGISTRATION_API: "/sign",
+    SIGN_API: "/login",
     USER_API: "/api/user",
     POST_API: "/api/post",
-    SIGN_API: "/api/sign",
 };
 
 export const STATUS_OK = 200;

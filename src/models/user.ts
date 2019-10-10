@@ -1,6 +1,7 @@
 import mongoose, { Schema } from "mongoose";
 import { IUser } from "../interfaces/user";
 import BcryptMiddelware from "../middleware/bcrypt";
+import { Validation } from "../handlers/validation-handler";
 import DATA_BASE from "../constants/db";
 
 const UserSchema = new Schema({
@@ -24,13 +25,18 @@ const UserSchema = new Schema({
 });
 
 UserSchema.pre<IUser>(DATA_BASE.SAVE, function (next) {
-    BcryptMiddelware.createHash(this.password!)
+    try{
+        Validation.checkUserData(this);
+        BcryptMiddelware.createHash(this.password!)
         .then(password => {
             this.password = password;
             this.toJSON();
             next();
         })
         .catch(error => next(error));
+    } catch (error) {
+        next(error);
+    }
 });
 
 UserSchema.methods.toJSON = function () {
