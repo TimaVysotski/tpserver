@@ -49,7 +49,7 @@ class UserController {
     };
     checkCredentials = (body: IUser): Promise<IUser> => {
         return new Promise((resolve, reject) => {
-            models.user.findOne({ username: body.username })
+            models.user.findOne({ email: body.email })
                 .then(user => {
                     BcryptMiddelware.checkPassword(user!, body.password!)
                         .then((result) => {

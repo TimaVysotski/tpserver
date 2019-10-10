@@ -13,14 +13,17 @@ class SignRoutes {
     }
 
     initRoutes(): void {
-        this.router.post("/", ({ body }: express.Request, res: express.Response) => {
+        this.router.post("/", ({ body, headers }: express.Request, res: express.Response) => {
             this.controller.login(body)
-                .then(token => res.status(STATUS_OK).send(token))
+                .then(token => {
+                    console.log(headers);
+                    res.status(STATUS_OK).send(token)
+                })
                 .catch(error => res.status(STATUS_NOT_FOUND).send(error));
         });
 
-        this.router.delete("/", ({ body }: express.Request, res: express.Response) => {
-            this.controller.logout(body)
+        this.router.delete("/:id", (req: express.Request, res: express.Response) => {
+            this.controller.logout(req.params.id)
                 .then(user => res.status(STATUS_OK).send(user))
                 .catch(error => res.status(STATUS_NOT_FOUND).send(error));
         });

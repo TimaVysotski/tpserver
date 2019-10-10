@@ -3,6 +3,7 @@ import { IUser } from "../../interfaces/user";
 import TokenService from "../services/TokenService";
 import JwtMiddelware from "../../middleware/JwtMiddelware";
 import { IToken } from "../../interfaces/token";
+import models from "../../models";
 
 class SignController {
     private controller: UserController;
@@ -23,7 +24,7 @@ class SignController {
                     .then(user => {
                         try {
                             const token = this.tokenService.save({
-                                user: user, 
+                                user: user,
                                 token: this.middelware.getToken(user)
                             } as IToken);
                             resolve(token);
@@ -38,16 +39,16 @@ class SignController {
         });
     };
 
-    logout = (body: IUser) => {
+    logout = (id: string) => {
         return new Promise((resolve, reject) => {
-            try {
-                // const user = this.tokenService.delete(body);
-                // resolve(user);
-            } catch (error) {
-                reject(error);
-            }
+            models.token.findOne({user: id})
+            .then(token => {
+                this.tokenService.delete(token as IToken);
+                resolve();
+            })
+            .catch(error => reject(error));
         });
-    }
+    };
 }
 
 export default SignController;
