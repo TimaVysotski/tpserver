@@ -9,7 +9,7 @@ const PostSchema = new Schema({
     },
     postedBy: {
         type: String,
-    }
+    },
 })
 
 const post = mongoose.model<IPost>(DATA_BASE.POST, PostSchema);
