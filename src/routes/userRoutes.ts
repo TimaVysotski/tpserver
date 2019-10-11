@@ -1,4 +1,5 @@
 import express, { Router } from "express";
+import multer from "multer";
 import UserController from "../db/controllers/UserController";
 import LoginController from "../db/controllers/LoginController";
 import { STATUS_OK, STATUS_NOT_FOUND } from "../constants/api";
@@ -6,6 +7,7 @@ import { STATUS_OK, STATUS_NOT_FOUND } from "../constants/api";
 class UserRoutes {
   private controller: UserController;
   private login: LoginController;
+  private upload = multer({ dest: "uploads/" });
   readonly router: express.Router;
 
   constructor() {
@@ -28,14 +30,13 @@ class UserRoutes {
         .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });
 
-    // this.router.post("/", ({ body }: express.Request, res: express.Response) => {
-    //   this.controller.create(body)
-    //     .then(user => res.status(STATUS_OK).send(user))
-    //     .catch(error => res.status(STATUS_NOT_FOUND).send(error));
-    // });
+    this.router.post("/", this.upload.single("picture"), (req: express.Request, res: express.Response) => {
+      console.log(req.file);
+      res.send("success");
+    });
 
     this.router.put("/", ({ body }: express.Request, res: express.Response) => {
-      this.controller.update(body)     //POINT
+      this.controller.update(body)    
         .then(user => res.status(STATUS_OK).send(user))
         .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });

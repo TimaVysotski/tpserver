@@ -15,7 +15,7 @@ const configurateRoutes = {
             const token: String = jwt.checkHeaders(req);
             jwt.checkToken({ token } as IToken)
                 .then(token => {
-                    req.body = token.user
+                    req.body.currentUser = token.user;
                     next();
                 })
                 .catch(() => res.status(STATUS_NOT_FOUND).send("U Must login!"));

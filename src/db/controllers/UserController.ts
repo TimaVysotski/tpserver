@@ -3,6 +3,7 @@ import BcryptMiddelware from "../../middleware/bcrypt";
 import { UpdatedUserRequest } from "../../interfaces/express";
 import { IUser } from "../../interfaces/user";
 import { CREDENTIALS_ERROR } from "../../constants/api";
+import user from "../../models/user";
 
 class UserController {
     findAll = () => {
@@ -26,11 +27,11 @@ class UserController {
                 .catch(error => reject(error));
         });
     };
-    update = ({ body }: UpdatedUserRequest) => {
+    update = (body: UpdatedUserRequest) => {
         return new Promise((resolve, reject) => {
-            models.user.updateOne(body.id, body, { new: true })    // POINT
-                .then(user => console.log(user))
-                .catch(error => console.log(error));
+            models.user.findByIdAndUpdate(body.currentUser.id, { $set: body }, {new: true})
+                .then(user => resolve(user))
+                .catch(error => reject(error));
         });
     };
     delete = (id: string) => {
