@@ -2,6 +2,7 @@ import express, { Router } from "express";
 import multer from "multer";
 import UserController from "../db/controllers/UserController";
 import LoginController from "../db/controllers/LoginController";
+import { Validation } from "../handlers/validation-handler";
 import { STATUS_OK, STATUS_NOT_FOUND } from "../constants/api";
 
 class UserRoutes {
@@ -36,7 +37,7 @@ class UserRoutes {
     });
 
     this.router.put("/", ({ body }: express.Request, res: express.Response) => {
-      this.controller.update(body)    
+      this.controller.update(body)
         .then(user => res.status(STATUS_OK).send(user))
         .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });
@@ -47,8 +48,8 @@ class UserRoutes {
         .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });
 
-    this.router.delete("/", ({ body }: express.Request, res: express.Response) => {
-      this.login.logout(body.id)
+    this.router.delete("/", (req: express.Request, res: express.Response) => {
+      this.login.logout(req.body.currentUser.id)
         .then(user => res.status(STATUS_OK).send(user))
         .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });

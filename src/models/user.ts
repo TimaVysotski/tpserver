@@ -36,9 +36,9 @@ UserSchema.pre<IUser>(DATA_BASE.SAVE, function (next) {
         .catch(error => next(error));
     } catch (error) {
         next(error);
-    }
+    };
 });
-
+ 
 UserSchema.methods.toJSON = function () {
     const user = this.toObject();
     delete user.password;

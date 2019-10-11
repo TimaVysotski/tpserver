@@ -4,6 +4,7 @@ import { UpdatedUserRequest } from "../../interfaces/express";
 import { IUser } from "../../interfaces/user";
 import { CREDENTIALS_ERROR } from "../../constants/api";
 import user from "../../models/user";
+import { IToken } from "../../interfaces/token";
 
 class UserController {
     findAll = () => {
@@ -65,5 +66,8 @@ class UserController {
                 .catch(error => reject(error))
         });
     };
+    checkUserDate = (body: IToken) => {
+
+    }
 }
 export default UserController;
