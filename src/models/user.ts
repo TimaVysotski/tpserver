@@ -25,20 +25,20 @@ const UserSchema = new Schema({
 });
 
 UserSchema.pre<IUser>(DATA_BASE.SAVE, function (next) {
-    try{
+    try {
         Validation.checkUserData(this);
         BcryptMiddelware.createHash(this.password!)
-        .then(password => {
-            this.password = password;
-            this.toJSON();
-            next();
-        })
-        .catch(error => next(error));
+            .then(password => {
+                this.password = password;
+                this.toJSON();
+                next();
+            })
+            .catch(error => next(error));
     } catch (error) {
         next(error);
     };
 });
- 
+
 UserSchema.methods.toJSON = function () {
     const user = this.toObject();
     delete user.password;

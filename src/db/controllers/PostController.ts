@@ -1,6 +1,7 @@
 import express from "express";
 import models from "../../models/index";
 import { UpdatedPostRequest } from "../../interfaces/express";
+import { IPost } from "../../interfaces/post";
 
 class PostController {
     findAll = () => {
@@ -17,9 +18,9 @@ class PostController {
                 .catch(error => reject(error));
         });
     };
-    create = (body: UpdatedPostRequest) => {
+    create = (post: IPost) => {
         return new Promise((resolve, reject) => {
-            models.post.create(body)
+            models.post.create(post)
                 .then(post => resolve(post))
                 .catch(error => reject(error));
         });

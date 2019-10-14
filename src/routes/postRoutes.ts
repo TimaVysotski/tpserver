@@ -1,6 +1,7 @@
 import express, { Router } from "express";
 import PostController from "../db/controllers/PostController";
 import { STATUS_OK, STATUS_NOT_FOUND } from "../constants/api";
+import { IPost } from "../interfaces/post";
 
 class PostRoutes {
   private controller: PostController;
@@ -26,7 +27,10 @@ class PostRoutes {
     });
 
     this.router.post("/", ({ body }: express.Request, res: express.Response) => {
-      this.controller.create(body)
+      this.controller.create({
+        user: body.currentUser,
+        text: body.text,
+      } as IPost)
         .then(post => res.status(STATUS_OK).send(post))
         .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });

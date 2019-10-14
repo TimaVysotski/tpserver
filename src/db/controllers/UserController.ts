@@ -2,9 +2,7 @@ import models from "../../models/index";
 import BcryptMiddelware from "../../middleware/bcrypt";
 import { UpdatedUserRequest } from "../../interfaces/express";
 import { IUser } from "../../interfaces/user";
-import { CREDENTIALS_ERROR } from "../../constants/api";
-import user from "../../models/user";
-import { IToken } from "../../interfaces/token";
+import { ERROR, CREDENTIALS_ERROR } from "../../constants/api";
 
 class UserController {
     findAll = () => {
@@ -30,7 +28,9 @@ class UserController {
     };
     update = (body: UpdatedUserRequest) => {
         return new Promise((resolve, reject) => {
-            models.user.findByIdAndUpdate(body.currentUser.id, { $set: body }, {new: true})
+            models.user.findOneAndUpdate(body.currentUser.id, body, {new: true}, (error, user) =>{
+                if (error) { throw ERROR; }
+            })
                 .then(user => resolve(user))
                 .catch(error => reject(error));
         });
@@ -66,8 +66,5 @@ class UserController {
                 .catch(error => reject(error))
         });
     };
-    checkUserDate = (body: IToken) => {
-
-    }
 }
 export default UserController;

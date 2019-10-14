@@ -15,7 +15,6 @@ export const Validation = {
     },
     checkUserData(body: IUserBase) {
         try {
-            console.log(body);
             if (body.email) { this.checkUserEmail(body.email) };
             if (body.username) { this.checkUserUsername(body.username) };
             if (body.password) { this.checkUserPassword(body.password) };

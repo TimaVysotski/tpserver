@@ -13,7 +13,7 @@ class SignRoutes {
     }
 
     initRoutes(): void {
-        this.router.post("/", ({ body}: express.Request, res: express.Response) => {
+        this.router.post("/", ({ body }: express.Request, res: express.Response) => {
             this.controller.login(body)
                 .then(token => {
                     res.status(STATUS_OK).send(token)
