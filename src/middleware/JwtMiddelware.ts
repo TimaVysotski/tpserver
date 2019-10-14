@@ -4,6 +4,7 @@ import JWT_CONFIG from "../constants/jwtSecure";
 import models from "../models/index";
 import { IUser } from "../interfaces/user";
 import { IToken } from "../interfaces/token";
+import { USER } from "../constants/db";
 
 class JwtMiddelware {
     getToken = (user: IUser) => {
@@ -18,7 +19,7 @@ class JwtMiddelware {
     };
     checkToken = (token: IToken): Promise<IToken> => {
         return new Promise((resolve, reject) => {
-            models.token.findOne({ token: token.token }).populate("user")
+            models.token.findOne({ token: token.token }).populate(USER)
                 .then(token => {
                     if (token) {
                         resolve(token)

@@ -1,6 +1,4 @@
-import express from "express";
 import models from "../../models/index";
-import { UpdatedPostRequest } from "../../interfaces/express";
 import { IPost } from "../../interfaces/post";
 
 class PostController {
@@ -25,9 +23,9 @@ class PostController {
                 .catch(error => reject(error));
         });
     };
-    update = ({ body }: UpdatedPostRequest) => {
+    update = (text: string, id: string) => {
         return new Promise((resolve, reject) => {
-            models.post.updateOne(body.id, body)    // POINT
+            models.post.update({ _id: id }, { text }, { new: true })
                 .then(post => resolve(post))
                 .catch(error => reject(error));
         });

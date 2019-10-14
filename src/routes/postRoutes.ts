@@ -35,8 +35,8 @@ class PostRoutes {
         .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });
 
-    this.router.put("/", ({ body }: express.Request, res: express.Response) => {
-      this.controller.update(body)
+    this.router.put("/:id", ({ body, params }: express.Request, res: express.Response) => {
+      this.controller.update(body.text, params.id)
         .then(post => res.status(STATUS_OK).send(post))
         .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });

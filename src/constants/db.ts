@@ -5,4 +5,5 @@ const DATA_BASE = {
     TOKEN: "Token",
 }
 
+export const USER = "user";
 export default DATA_BASE;
