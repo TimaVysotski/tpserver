@@ -7,4 +7,4 @@ export interface IPost extends Document{
     text: string,
     postedBy: string,
     user: IUser,
-}
+};

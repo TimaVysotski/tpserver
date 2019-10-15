@@ -14,17 +14,17 @@ export const Validation = {
     },
     checkUserData(body: IUserBase) {
         try {
-            this.checkUserEmail(body.email);
-            this.checkUserUsername(body.username);
-            this.checkUserPassword(body.password);
-            this.checkUserGender(body.gender);
+            if (body.email) {this.checkUserEmail(body.email)};
+            if (body.username) {this.checkUserUsername(body.username)};
+            if (body.password) {this.checkUserPassword(body.password)};
+            if (body.gender) {this.checkUserGender(body.gender)};
             return body;
         } catch (error) {
             throw `Error!!! Check ${error} data!`;
         }
     },
     checkUserEmail(email?: string) {
-        if (!email || validEmail.test(email)) {
+        if (!email || !validEmail.test(email)) {
             throw "email";
         }
     },
@@ -42,5 +42,5 @@ export const Validation = {
         if (!(<any>Object).values(Gender).includes(gender)) {
             throw 'gender';
         }
-    }
-}
+    },
+};

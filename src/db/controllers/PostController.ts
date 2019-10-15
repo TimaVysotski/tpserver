@@ -33,10 +33,10 @@ class PostController {
     delete = (id: string) => {
         return new Promise((resolve, reject) => {
             models.post.findByIdAndRemove(id)
-                .then(() => resolve())
+                .then(() => resolve("true"))
                 .catch(error => reject(error));
         });
-    }
-}
+    };
+};
 
 export default PostController;

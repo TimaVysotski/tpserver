@@ -7,7 +7,7 @@ export interface UpdatedPostRequest extends express.Request {
         text?: string,
         postedBy?: string,
     }
-}
+};
 
 export interface UpdatedUserRequest extends express.Request {
     body: {
@@ -18,4 +18,4 @@ export interface UpdatedUserRequest extends express.Request {
         id?: string,
     }
     [x: string]: any;
-}
+};

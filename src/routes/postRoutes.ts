@@ -11,7 +11,7 @@ class PostRoutes {
     this.controller = new PostController();
     this.router = Router();
     this.initRoutes();
-  }
+  };
 
   initRoutes(): void {
     this.router.get("/", (req: express.Request, res: express.Response) => {

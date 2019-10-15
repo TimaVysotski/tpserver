@@ -10,7 +10,7 @@ class SignRoutes {
         this.controller = new SignController();
         this.router = Router();
         this.initRoutes();
-    }
+    };
 
     initRoutes(): void {
         this.router.post("/", ({ body }: express.Request, res: express.Response) => {
@@ -20,7 +20,7 @@ class SignRoutes {
                 })
                 .catch(error => res.status(STATUS_NOT_FOUND).send(error));
         });
-    }
+    };
 };
 
 export default new SignRoutes().router;

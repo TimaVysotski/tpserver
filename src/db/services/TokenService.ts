@@ -15,7 +15,7 @@ class TokenService {
                 .then(() => resolve("true"))
                 .catch(error => reject(error));
         });
-    }
-}
+    };
+};
 
 export default TokenService;

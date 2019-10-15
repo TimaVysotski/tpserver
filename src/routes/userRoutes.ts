@@ -3,7 +3,7 @@ import multer from "multer";
 import UserController from "../db/controllers/UserController";
 import LoginController from "../db/controllers/LoginController";
 import { STATUS_OK, STATUS_NOT_FOUND } from "../constants/api";
-import { IUser } from "../interfaces/user";
+import { IPassword } from "../interfaces/user";
 
 class UserRoutes {
   private controller: UserController;
@@ -16,7 +16,7 @@ class UserRoutes {
     this.login = new LoginController();
     this.router = Router();
     this.initRoutes();
-  }
+  };
 
   public initRoutes(): void {
     this.router.get("/", (req: express.Request, res: express.Response) => {
@@ -53,6 +53,16 @@ class UserRoutes {
         .then(user => res.status(STATUS_OK).send(user))
         .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });
+
+    this.router.post("/password/change", ({ body }: express.Request, res: express.Response) => {
+      this.controller.changePassword({
+          password: body.password,
+          newPassword: body.newPassword, 
+          user: body.currentUser
+      } as IPassword)
+          .then(result => res.status(STATUS_OK).send(result))
+          .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+  });
   };
 };
 

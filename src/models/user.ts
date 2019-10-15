@@ -1,7 +1,8 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose, { Schema, models } from "mongoose";
+import hooker from "hooker";
+import { Validation } from "../handlers/validation-handler";
 import { IUser } from "../interfaces/user";
 import BcryptMiddelware from "../middleware/bcrypt";
-import { Validation } from "../handlers/validation-handler";
 import DATA_BASE from "../constants/db";
 
 const UserSchema = new Schema({
@@ -39,17 +40,22 @@ UserSchema.pre<IUser>(DATA_BASE.SAVE, function (next) {
     };
 });
 
-UserSchema.pre("update", function(next){
-    console.log("PreUPdate is work!!!");
-    next();
-});
-
 UserSchema.methods.toJSON = function () {
     const user = this.toObject();
     delete user.password;
     return user;
-}
+};
 
 const user = mongoose.model<IUser>(DATA_BASE.USER, UserSchema);
+
+hooker.hook(user, DATA_BASE.UPDATE, {
+    pre:(user, body) => {
+        try {
+            Validation.checkUserData(body);
+        } catch (error) {
+            throw error;
+        };
+    },
+});
 
 export default user;

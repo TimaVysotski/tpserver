@@ -4,4 +4,4 @@ import { IUser } from "./user";
 export interface IToken extends Document {
     user: IUser;
     token: string;
-}
+};

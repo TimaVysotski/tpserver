@@ -9,5 +9,6 @@ class SignController {
                 .catch(error => reject(error));
         });
     };
-}
+};
+
 export default SignController;

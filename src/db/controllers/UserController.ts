@@ -1,8 +1,9 @@
 import models from "../../models/index";
 import BcryptMiddelware from "../../middleware/bcrypt";
 import { UpdatedUserRequest } from "../../interfaces/express";
-import { IUser } from "../../interfaces/user";
-import { ERROR, CREDENTIALS_ERROR } from "../../constants/api";
+import { IUser, IPassword, IUserBase } from "../../interfaces/user";
+import { CREDENTIALS_ERROR } from "../../constants/api";
+import { Validation } from "../../handlers/validation-handler";
 
 class UserController {
     findAll = () => {
@@ -30,7 +31,7 @@ class UserController {
         return new Promise((resolve, reject) => {
             models.user.findById({ _id: body.currentUser._id })
                 .then(user => {
-                    user!.update({ $set: body  })
+                    user!.update(body)
                         .then(user => resolve(user))
                         .catch(error => reject(error));
                 })
@@ -68,5 +69,32 @@ class UserController {
                 .catch(error => reject(error))
         });
     };
-}
+    changePassword = (password: IPassword) => {
+        return new Promise((resolve, reject) => {        
+            BcryptMiddelware.checkPassword(password.user as IUserBase, password.password!)
+                .then(() => {
+                    try {
+                        Validation.checkUserPassword(password.newPassword!);
+                        BcryptMiddelware.createHash(password.newPassword!)
+                        .then(newPassword => {
+                            this.updatePassword(password.user as IUser, newPassword)
+                            .then(user => resolve(user))
+                            .catch(error => reject(error));
+                        })
+                        .catch(error => reject(error));
+                    } catch (error) {
+                        reject(`Chech new ${error} data`);
+                    }
+                }).catch(error => reject(error));
+        });
+    };
+    updatePassword = (user: IUser, newPassword: string) => {
+        return new Promise((resolve, reject) => {
+            models.user.findByIdAndUpdate(user._id, { password: newPassword }, { new: true })
+                .then(user => resolve(user))
+                .catch(error => reject(error));
+        });
+    };
+};
+
 export default UserController;

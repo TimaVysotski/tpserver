@@ -24,7 +24,7 @@ const configurateRoutes = {
         app.use(API_ROUTES.SIGN_API, LoginRoutes);
         app.use(API_ROUTES.USER_API, UserRoutes);
         app.use(API_ROUTES.POST_API, PostRoutes);
-    }
+    },
 };
 
 export default configurateRoutes;

@@ -7,9 +7,9 @@ const BcryptMiddelware = {
         return bcrypt.hash(password, Number(process.env.SALT_ROUNDSs));
     },
     async checkPassword(user: IUserBase, password: string) {
-        const result = bcrypt.compare(password, user.password!);
+        const result = await bcrypt.compare(password, user.password!);
         if (result) { return result; } else { throw CREDENTIALS_ERROR; }
     },
-}
+};
 
 export default BcryptMiddelware;

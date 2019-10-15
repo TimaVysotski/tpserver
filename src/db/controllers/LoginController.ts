@@ -15,8 +15,7 @@ class LoginController {
         this.controller = new UserController();
         this.middelware = new JwtMiddelware();
         this.tokenService = new TokenService();
-    }
-
+    };
     login = (body: IUser) => {
         return new Promise((resolve, reject) => {
             try {
@@ -38,7 +37,6 @@ class LoginController {
             }
         });
     };
-
     logout = (id: string) => {
         return new Promise((resolve, reject) => {
             models.token.findOne({ user: id })
@@ -49,6 +47,6 @@ class LoginController {
                 .catch(error => reject(error));
         });
     };
-}
+};
 
 export default LoginController;
