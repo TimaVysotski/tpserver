@@ -28,10 +28,12 @@ class UserController {
     };
     update = (body: UpdatedUserRequest) => {
         return new Promise((resolve, reject) => {
-            models.user.findOneAndUpdate(body.currentUser.id, body, {new: true}, (error, user) =>{
-                if (error) { throw ERROR; }
-            })
-                .then(user => resolve(user))
+            models.user.findById({ _id: body.currentUser._id })
+                .then(user => {
+                    user!.update({ $set: body  })
+                        .then(user => resolve(user))
+                        .catch(error => reject(error));
+                })
                 .catch(error => reject(error));
         });
     };

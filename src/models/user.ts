@@ -39,6 +39,11 @@ UserSchema.pre<IUser>(DATA_BASE.SAVE, function (next) {
     };
 });
 
+UserSchema.pre("update", function(next){
+    console.log("PreUPdate is work!!!");
+    next();
+});
+
 UserSchema.methods.toJSON = function () {
     const user = this.toObject();
     delete user.password;

@@ -1,6 +1,5 @@
 import { Gender, validPassword, validUsername, validEmail } from "../constants/validation";
 import { IUserBase } from "../interfaces/user";
-import { IToken } from "../interfaces/token";
 
 export const Validation = {
     notEmpty(body: IUserBase) {
@@ -15,10 +14,10 @@ export const Validation = {
     },
     checkUserData(body: IUserBase) {
         try {
-            if (body.email) { this.checkUserEmail(body.email) };
-            if (body.username) { this.checkUserUsername(body.username) };
-            if (body.password) { this.checkUserPassword(body.password) };
-            if (body.gender) { this.checkUserGender(body.gender) };
+            this.checkUserEmail(body.email);
+            this.checkUserUsername(body.username);
+            this.checkUserPassword(body.password);
+            this.checkUserGender(body.gender);
             return body;
         } catch (error) {
             throw `Error!!! Check ${error} data!`;

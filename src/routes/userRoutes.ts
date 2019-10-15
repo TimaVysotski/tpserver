@@ -2,8 +2,8 @@ import express, { Router } from "express";
 import multer from "multer";
 import UserController from "../db/controllers/UserController";
 import LoginController from "../db/controllers/LoginController";
-import { Validation } from "../handlers/validation-handler";
 import { STATUS_OK, STATUS_NOT_FOUND } from "../constants/api";
+import { IUser } from "../interfaces/user";
 
 class UserRoutes {
   private controller: UserController;
