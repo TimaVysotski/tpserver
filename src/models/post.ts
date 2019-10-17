@@ -14,6 +14,19 @@ const PostSchema = new Schema({
     },
 });
 
+PostSchema.pre<IPost>(DATA_BASE.SAVE, function (next) {
+    this.toJSON();
+    next();
+});
+
+PostSchema.methods.toJSON = function () {
+    const post = this.toObject();
+    post.id = post._id;
+    delete post._id;
+    delete post.__v;
+    return post;
+};
+
 const post = mongoose.model<IPost>(DATA_BASE.POST, PostSchema);
 
 export default post;
