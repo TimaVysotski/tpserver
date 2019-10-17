@@ -56,13 +56,13 @@ class UserRoutes {
 
     this.router.post("/password/change", ({ body }: express.Request, res: express.Response) => {
       this.controller.changePassword({
-          password: body.password,
-          newPassword: body.newPassword, 
-          user: body.currentUser
+        password: body.password,
+        newPassword: body.newPassword,
+        user: body.currentUser
       } as IPassword)
-          .then(result => res.status(STATUS_OK).send(result))
-          .catch(error => res.status(STATUS_NOT_FOUND).send(error));
-  });
+        .then(result => res.status(STATUS_OK).send(result))
+        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    });
   };
 };
 

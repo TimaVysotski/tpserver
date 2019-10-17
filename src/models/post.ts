@@ -7,15 +7,12 @@ const PostSchema = new Schema({
         type: String,
         required: true,
     },
-    postedBy: {
-        type: String,
-    },
     user: {
         type: Schema.Types.ObjectId,
         required: true,
         ref: DATA_BASE.USER,
     },
-})
+});
 
 const post = mongoose.model<IPost>(DATA_BASE.POST, PostSchema);
 
