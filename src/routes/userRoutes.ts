@@ -1,19 +1,23 @@
 import express, { Router } from "express";
-import multer from "multer";
 import UserController from "../db/controllers/UserController";
 import LoginController from "../db/controllers/LoginController";
 import { STATUS_OK, STATUS_NOT_FOUND } from "../constants/api";
 import { IPassword } from "../interfaces/user";
+import MulterService from "../db/services/MulterService";
+import Storage from "../db/services/storage/Storage"
+
+const storage = Storage.getBucket();
 
 class UserRoutes {
   private controller: UserController;
   private login: LoginController;
-  private upload = multer({ dest: "uploads/" });
+  private multer: MulterService;
   readonly router: express.Router;
 
   constructor() {
     this.controller = new UserController();
     this.login = new LoginController();
+    this.multer = new MulterService();
     this.router = Router();
     this.initRoutes();
   };
@@ -31,9 +35,12 @@ class UserRoutes {
         .catch(error => res.status(STATUS_NOT_FOUND).send(error));
     });
 
-    this.router.post("/", this.upload.single("picture"), (req: express.Request, res: express.Response) => {
-      console.log(req.file);
-      res.send("success");
+    this.router.post("/picture", this.multer.upload.single("picture"), ({ body, file }: express.Request, res: express.Response) => {
+      try {
+        res.send("success");
+      } catch (error) {
+        res.send(error)
+      }
     });
 
     this.router.put("/", ({ body }: express.Request, res: express.Response) => {

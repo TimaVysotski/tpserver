@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IPost } from "../interfaces/post";
-import DATA_BASE from "../constants/db";
+import { DATA_BASE } from "../constants/db";
 
 const PostSchema = new Schema({
     text: {

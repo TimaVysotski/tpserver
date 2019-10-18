@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 import { IToken } from "../interfaces/token";
-import DATA_BASE from "../constants/db";
+import { DATA_BASE } from "../constants/db";
 
 const TokenSchema = new Schema({
     user: {

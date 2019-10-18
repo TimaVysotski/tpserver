@@ -3,7 +3,7 @@ import hooker from "hooker";
 import { Validation } from "../handlers/validation-handler";
 import { IUser } from "../interfaces/user";
 import BcryptMiddelware from "../middleware/bcrypt";
-import DATA_BASE from "../constants/db";
+import { DATA_BASE } from "../constants/db";
 
 const UserSchema = new Schema({
     email: {
@@ -52,7 +52,7 @@ UserSchema.methods.toJSON = function () {
 const user = mongoose.model<IUser>(DATA_BASE.USER, UserSchema);
 
 hooker.hook(user, DATA_BASE.UPDATE, {
-    pre:(user, body) => {
+    pre: (user, body) => {
         try {
             Validation.checkUserData(body);
         } catch (error) {
