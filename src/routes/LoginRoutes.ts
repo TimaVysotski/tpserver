@@ -13,12 +13,13 @@ class SignRoutes {
     };
 
     initRoutes(): void {
-        this.router.post("/", ({ body }: express.Request, res: express.Response) => {
-            this.controller.login(body)
-                .then(token => {
-                    res.status(STATUS_OK).send(token)
-                })
-                .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+        this.router.post("/", async ({ body }: express.Request, res: express.Response) => {
+            try {
+                const token = await this.controller.login(body);
+                res.status(STATUS_OK).send(token);
+            } catch (error) {
+                res.status(STATUS_NOT_FOUND).send(error);
+            };
         });
     };
 };

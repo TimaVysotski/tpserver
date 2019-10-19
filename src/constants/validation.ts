@@ -1,6 +1,6 @@
 export enum Gender {
-    Male = "male",
-    Female = "female",
+  Male = "male",
+  Female = "female",
 };
 
 export const validUsername = /^[a-z0-9A-Z_-]{3,16}$/;

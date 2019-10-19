@@ -11,14 +11,15 @@ const jwt = new JwtMiddelware();
 
 const configurateRoutes = {
     init: (app: express.Application) => {
-        app.use("/api", (req: express.Request, res: express.Response, next: express.NextFunction) => {
-            const token: String = jwt.checkHeaders(req);
-            jwt.checkToken({ token } as IToken)
-                .then(token => {
-                    req.body.currentUser = token.user;
-                    next();
-                })
-                .catch(() => res.status(STATUS_NOT_FOUND).send("U Must login!"));
+        app.use("/api", async (req: express.Request, res: express.Response, next: express.NextFunction) => {
+            try {
+                const token: String = jwt.checkHeaders(req);
+                const userToken: IToken = await jwt.checkToken({ token } as IToken)
+                req.body.currentUser = userToken.user;
+                next();
+            } catch (error) {
+                res.status(STATUS_NOT_FOUND).send("U Must login!");
+            };
         });
         app.use(API_ROUTES.REGISTRATION_API, SignRoutes);
         app.use(API_ROUTES.SIGN_API, LoginRoutes);

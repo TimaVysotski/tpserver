@@ -3,43 +3,45 @@ import { IPost } from "../../interfaces/post";
 import { DATA_BASE, USER } from "../../constants/db";
 
 class PostController {
-    findAll = () => {
-        return new Promise((resolve, reject) => {
-            models.post.find().populate([USER])
-                .then(posts => resolve(posts))
-                .catch(error => reject(error));
-        });
+    findAll = async () => {
+        try {
+            const posts = await models.post.find().populate([USER]);
+            return posts;
+        } catch (error) {
+            throw error;
+        };
     };
-    findById = (id: string) => {
-        return new Promise((resolve, reject) => {
-            models.post.findById(id).populate([USER])
-                .then(post => {
-                    console.log(post);
-                    resolve(post)
-                })
-                .catch(error => reject(error));
-        });
+    findById = async (id: string) => {
+        try {
+            const post = await models.post.findById(id).populate([USER]);
+            return post;
+        } catch (error) {
+            throw error;
+        };
     };
-    create = (post: IPost) => {
-        return new Promise((resolve, reject) => {
-            models.post.create(post)
-                .then(res => resolve(res))
-                .catch(error => reject(error));
-        });
+    create = async (post: IPost) => {
+        try {
+            const searchPost = await models.post.create(post);
+            return searchPost;
+        } catch (error) {
+            throw error;
+        };
     };
-    update = (text: string, id: string) => {
-        return new Promise((resolve, reject) => {
-            models.post.update({ _id: id }, { text }, { new: true }).populate([USER])
-                .then(post => resolve(post))
-                .catch(error => reject(error));
-        });
+    update = async (text: string, id: string) => {
+        try {
+            const post = await models.post.update({ _id: id }, { text }, { new: true }).populate([USER]);
+            return post;
+        } catch (error) {
+            throw error;
+        };
     };
-    delete = (id: string) => {
-        return new Promise((resolve, reject) => {
-            models.post.findByIdAndRemove(id)
-                .then(() => resolve("true"))
-                .catch(error => reject(error));
-        });
+    delete = async (id: string) => {
+        try {
+            await models.post.findByIdAndRemove(id);
+            return "true";
+        } catch (error) {
+            throw error;
+        };
     };
 };
 

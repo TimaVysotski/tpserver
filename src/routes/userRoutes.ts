@@ -4,9 +4,7 @@ import LoginController from "../db/controllers/LoginController";
 import { STATUS_OK, STATUS_NOT_FOUND } from "../constants/api";
 import { IPassword } from "../interfaces/user";
 import MulterService from "../db/services/MulterService";
-import Storage from "../db/services/storage/Storage"
 
-const storage = Storage.getBucket();
 
 class UserRoutes {
   private controller: UserController;
@@ -23,19 +21,25 @@ class UserRoutes {
   };
 
   public initRoutes(): void {
-    this.router.get("/", (req: express.Request, res: express.Response) => {
-      this.controller.findAll()
-        .then(users => res.status(STATUS_OK).send(users))
-        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    this.router.get("/", async (req: express.Request, res: express.Response) => {
+      try {
+        const users = await this.controller.findAll();
+        res.status(STATUS_OK).send(users);
+      } catch (error) {
+        res.status(STATUS_NOT_FOUND).send(error);
+      };
     });
 
-    this.router.get("/:id", ({ params: { id } }: express.Request, res: express.Response) => {
-      this.controller.findById(id)
-        .then(user => res.status(STATUS_OK).send(user))
-        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    this.router.get("/:id", async ({ params: { id } }: express.Request, res: express.Response) => {
+      try {
+        const user = await this.controller.findById(id);
+        res.status(STATUS_OK).send(user);
+      } catch (error) {
+        res.status(STATUS_NOT_FOUND).send(error);
+      };
     });
 
-    this.router.post("/picture", this.multer.upload.single("picture"), ({ body, file }: express.Request, res: express.Response) => {
+    this.router.post("/picture", this.multer.upload.single("picture"), async ({ body, file }: express.Request, res: express.Response) => {
       try {
         res.send("success");
       } catch (error) {
@@ -43,32 +47,44 @@ class UserRoutes {
       }
     });
 
-    this.router.put("/", ({ body }: express.Request, res: express.Response) => {
-      this.controller.update(body)
-        .then(user => res.status(STATUS_OK).send(user))
-        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    this.router.put("/", async ({ body }: express.Request, res: express.Response) => {
+      try {
+        const user = await this.controller.update(body);
+        res.status(STATUS_OK).send(user);
+      } catch (error) {
+        res.status(STATUS_NOT_FOUND).send(error);
+      };
     });
 
-    this.router.delete("/:id", (req: express.Request, res: express.Response) => {
-      this.controller.delete(req.params.id)
-        .then(() => res.status(STATUS_OK))
-        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    this.router.delete("/:id", async (req: express.Request, res: express.Response) => {
+      try {
+        await this.controller.delete(req.params.id);
+        res.status(STATUS_OK)
+      } catch (error) {
+        res.status(STATUS_NOT_FOUND).send(error);
+      };
     });
 
-    this.router.delete("/", (req: express.Request, res: express.Response) => {
-      this.login.logout(req.body.currentUser.id)
-        .then(user => res.status(STATUS_OK).send(user))
-        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    this.router.delete("/", async (req: express.Request, res: express.Response) => {
+      try {
+        const user = await this.login.logout(req.body.currentUser.id);
+        res.status(STATUS_OK).send(user);
+      } catch (error) {
+        res.status(STATUS_NOT_FOUND).send(error);
+      };
     });
 
-    this.router.post("/password/change", ({ body }: express.Request, res: express.Response) => {
-      this.controller.changePassword({
-        password: body.password,
-        newPassword: body.newPassword,
-        user: body.currentUser
-      } as IPassword)
-        .then(result => res.status(STATUS_OK).send(result))
-        .catch(error => res.status(STATUS_NOT_FOUND).send(error));
+    this.router.post("/password/change", async ({ body }: express.Request, res: express.Response) => {
+      try {
+        const result = await this.controller.changePassword({
+          password: body.password,
+          newPassword: body.newPassword,
+          user: body.currentUser
+        } as IPassword);
+        res.status(STATUS_OK).send(result);
+      } catch (error) {
+        res.status(STATUS_NOT_FOUND).send(error);
+      };
     });
   };
 };

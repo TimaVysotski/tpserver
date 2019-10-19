@@ -16,36 +16,26 @@ class LoginController {
         this.middelware = new JwtMiddelware();
         this.tokenService = new TokenService();
     };
-    login = (body: IUser) => {
-        return new Promise((resolve, reject) => {
-            try {
-                this.controller.checkCredentials(body)
-                    .then(user => {
-                        try {
-                            const token = this.tokenService.save({
-                                user: user,
-                                token: this.middelware.getToken(user)
-                            } as IToken);
-                            resolve(token);
-                        } catch (error) {
-                            reject(error);
-                        }
-                    })
-                    .catch(error => reject(error));
-            } catch (error) {
-                reject(error);
-            }
-        });
+    login = async (body: IUser) => {
+        try {
+            const user = await this.controller.checkCredentials(body);
+            const token = this.tokenService.save({
+                user: user,
+                token: this.middelware.getToken(user)
+            } as IToken);
+            return token;
+        } catch (error) {
+            throw error;
+        };
     };
-    logout = (id: string) => {
-        return new Promise((resolve, reject) => {
-            models.token.findOne({ user: id })
-                .then(token => {
-                    this.tokenService.delete(token as IToken);
-                    resolve("true");
-                })
-                .catch(error => reject(error));
-        });
+    logout = async (id: string) => {
+        try {
+            const token = await models.token.findOne({ user: id });
+            await this.tokenService.delete(token as IToken);
+            return "true";
+        } catch (error) {
+            return error;
+        };
     };
 };
 

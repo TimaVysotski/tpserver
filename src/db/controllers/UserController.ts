@@ -6,94 +6,88 @@ import { CREDENTIALS_ERROR } from "../../constants/api";
 import { Validation } from "../../handlers/validation-handler";
 
 class UserController {
-    findAll = () => {
-        return new Promise((resolve, reject) => {
-            models.user.find()
-                .then(users => resolve(users))
-                .catch(error => reject(error));
-        });
+    findAll = async () => {
+        try {
+            const users = await models.user.find();
+            return users;
+        } catch (error) {
+            throw error;
+        };
     };
-    findById = (id: string) => {
-        return new Promise((resolve, reject) => {
-            models.user.findById(id)
-                .then(user => resolve(user))
-                .catch(error => reject(error));
-        });
+    findById = async (id: string) => {
+        try {
+            const user = await models.user.findById(id);
+            return user;
+        } catch (error) {
+            throw error;
+        };
     };
-    create = (body: UpdatedUserRequest) => {
-        return new Promise((resolve, reject) => {
-            models.user.create(body)
-                .then(user => resolve(user))
-                .catch(error => reject(error));
-        });
+    create = async (body: UpdatedUserRequest) => {
+        try {
+            const user = await models.user.create(body);
+            return user;
+        } catch (error) {
+            throw error;
+        };
     };
-    update = (body: UpdatedUserRequest) => {
-        return new Promise((resolve, reject) => {
-            models.user.findById({ _id: body.currentUser._id })
-                .then(user => {
-                    user!.update(body)
-                        .then(user => resolve(user))
-                        .catch(error => reject(error));
-                })
-                .catch(error => reject(error));
-        });
+    update = async (body: UpdatedUserRequest) => {
+        try {
+            const user = await models.user.findById({ _id: body.currentUser._id });
+            const searchUser = await user!.update(body);
+            return searchUser;
+        } catch (error) {
+            throw error;
+        };
     };
-    delete = (id: string) => {
-        return new Promise((resolve, reject) => {
-            models.user.findByIdAndRemove(id)
-                .then(() => resolve())
-                .catch(error => reject(error));
-        });
+    delete = async (id: string) => {
+        try {
+            await models.user.findByIdAndRemove(id);
+            return;
+        } catch (error) {
+            return error;
+        };
     };
-    find = (username: string) => {
-        return new Promise((resolve, reject) => {
-            models.user.findOne({ username })
-                .then(user => resolve(user))
-                .catch(error => reject(error));
-        });
+    find = async (username: string) => {
+        try {
+            const user = await models.user.findOne({ username });
+            return user;
+        } catch (error) {
+            return error;
+        };
     };
-    checkCredentials = (body: IUser): Promise<IUser> => {
-        return new Promise((resolve, reject) => {
-            models.user.findOne({ email: body.email })
-                .then(user => {
-                    BcryptMiddelware.checkPassword(user!, body.password!)
-                        .then((result) => {
-                            if (result) {
-                                resolve(user!);
-                            } else {
-                                throw CREDENTIALS_ERROR;
-                            }
-                        })
-                        .catch(error => reject(error));
-                })
-                .catch(error => reject(error))
-        });
+    checkCredentials = async (body: IUser): Promise<IUser> => {
+        try {
+            const user = await models.user.findOne({ email: body.email });
+            const result = await BcryptMiddelware.checkPassword(user!, body.password!);
+            if (result) {
+                return user!;
+            } else {
+                throw CREDENTIALS_ERROR;
+            }
+        } catch (error) {
+            throw error;
+        };
     };
-    changePassword = (password: IPassword) => {
-        return new Promise((resolve, reject) => {        
-            BcryptMiddelware.checkPassword(password.user as IUserBase, password.password!)
-                .then(() => {
-                    try {
-                        Validation.checkUserPassword(password.newPassword!);
-                        BcryptMiddelware.createHash(password.newPassword!)
-                        .then(newPassword => {
-                            this.updatePassword(password.user as IUser, newPassword)
-                            .then(user => resolve(user))
-                            .catch(error => reject(error));
-                        })
-                        .catch(error => reject(error));
-                    } catch (error) {
-                        reject(`Chech new ${error} data`);
-                    }
-                }).catch(error => reject(error));
-        });
+    changePassword = async (password: IPassword) => {
+        try {
+            await BcryptMiddelware.checkPassword(password.user as IUserBase, password.password!);
+            Validation.checkUserPassword(password.newPassword!);
+            const newPassword = await BcryptMiddelware.createHash(password.newPassword!);
+            const user = await this.updatePassword(password.user as IUser, newPassword);
+            return user;
+        } catch (error) {
+            throw error;
+        };
     };
-    updatePassword = (user: IUser, newPassword: string) => {
-        return new Promise((resolve, reject) => {
-            models.user.findByIdAndUpdate(user._id, { password: newPassword }, { new: true })
-                .then(user => resolve(user))
-                .catch(error => reject(error));
-        });
+    updatePassword = async (user: IUser, newPassword: string) => {
+        try {
+            const searchUser = await models.user.findByIdAndUpdate(
+                user._id, { password: newPassword }, { new: true }
+            );
+            return searchUser;
+        } catch (error) {
+            return error;
+        };
     };
 };
 

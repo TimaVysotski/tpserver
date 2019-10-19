@@ -17,18 +17,17 @@ class JwtMiddelware {
             return "";
         }
     };
-    checkToken = (token: IToken): Promise<IToken> => {
-        return new Promise((resolve, reject) => {
-            models.token.findOne({ token: token.token }).populate(USER)
-                .then(token => {
-                    if (token) {
-                        resolve(token)
-                    } else {
-                        reject(null);
-                    }
-                })
-                .catch(error => reject(error));
-        });
+    checkToken = async (token: IToken): Promise<IToken> => {
+        try {
+            const userToken = await models.token.findOne({ token: token.token }).populate(USER);
+            if (userToken) {
+                return userToken;
+            } else {
+                throw null;
+            };
+        } catch (error) {
+            throw error;
+        };
     };
 };
 

@@ -2,19 +2,21 @@ import { IToken } from "../../interfaces/token";
 import models from "../../models";
 
 class TokenService {
-    save = (token: IToken) => {
-        return new Promise((resolve, reject) => {
-            models.token.create(token)
-                .then(token => resolve(token))
-                .catch(error => reject(error));
-        });
+    save = async (tokenModel: IToken) => {
+        try {
+            const token = await models.token.create(tokenModel);
+            return token;
+        } catch (error) {
+            throw error;
+        };
     };
-    delete = ({ token }: IToken) => {
-        return new Promise((resolve, reject) => {
-            models.token.findOneAndRemove({ token })
-                .then(() => resolve("true"))
-                .catch(error => reject(error));
-        });
+    delete = async ({ token }: IToken) => {
+        try {
+            await models.token.findOneAndRemove({ token });
+            return "true";
+        } catch (error) {
+            throw error;
+        };
     };
 };
 

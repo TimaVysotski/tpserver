@@ -2,12 +2,13 @@ import models from "../../models/index";
 import { UpdatedUserRequest } from "../../interfaces/express";
 
 class SignController {
-    create = (body: UpdatedUserRequest) => {
-        return new Promise((resolve, reject) => {
-            models.user.create(body)
-                .then(user => resolve(user))
-                .catch(error => reject(error));
-        });
+    create = async (body: UpdatedUserRequest) => {
+        try {
+            const user = await models.user.create(body);
+            return user;
+        } catch (error) {
+            throw error;
+        };
     };
 };
 
