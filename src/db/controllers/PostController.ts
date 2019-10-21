@@ -1,6 +1,6 @@
 import models from "../../models/index";
 import { IPost } from "../../interfaces/post";
-import { DATA_BASE, USER } from "../../constants/db";
+import { USER } from "../../constants/db";
 
 class PostController {
     findAll = async () => {

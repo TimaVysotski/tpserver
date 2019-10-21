@@ -22,6 +22,10 @@ PostSchema.pre<IPost>(DATA_BASE.SAVE, function (next) {
 PostSchema.methods.toJSON = function () {
     const post = this.toObject();
     post.id = post._id;
+    post.user.id = post.user._id;
+    delete post.user._id;
+    delete post.user.password;
+    delete post.user.__v;
     delete post._id;
     delete post.__v;
     return post;

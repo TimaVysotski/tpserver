@@ -11,7 +11,7 @@ class MulterService {
         },
     });
     fileFilter = (req: Express.Request, file: Express.Multer.File, cb: any) => {
-        if (file.mimetype === MULTER.MIMETYPE_JPEG 
+        if (file.mimetype === MULTER.MIMETYPE_JPEG
             || file.mimetype === MULTER.MIMETYPE_PNG) {
             cb(null, true);
         } else {

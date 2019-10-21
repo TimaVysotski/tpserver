@@ -5,7 +5,6 @@ import { STATUS_OK, STATUS_NOT_FOUND } from "../constants/api";
 import { IPassword } from "../interfaces/user";
 import MulterService from "../db/services/MulterService";
 
-
 class UserRoutes {
   private controller: UserController;
   private login: LoginController;

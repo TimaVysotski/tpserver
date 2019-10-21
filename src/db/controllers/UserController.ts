@@ -72,8 +72,10 @@ class UserController {
         try {
             await BcryptMiddelware.checkPassword(password.user as IUserBase, password.password!);
             Validation.checkUserPassword(password.newPassword!);
-            const newPassword = await BcryptMiddelware.createHash(password.newPassword!);
-            const user = await this.updatePassword(password.user as IUser, newPassword);
+            const user = await this.updatePassword(
+                password.user as IUser,
+                await BcryptMiddelware.createHash(password.newPassword!)
+            );
             return user;
         } catch (error) {
             throw error;
