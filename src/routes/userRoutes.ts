@@ -1,15 +1,17 @@
-import express, { Router } from "express";
+import { Router, Response, Request } from "express";
 import UserController from "../db/controllers/UserController";
 import LoginController from "../db/controllers/LoginController";
 import { STATUS_OK, STATUS_NOT_FOUND } from "../constants/api";
 import { IPassword } from "../interfaces/user";
 import MulterService from "../db/services/MulterService";
+import Storage from "../db/services/storage/Storage";
+import { MULTER } from "../constants/db";
 
 class UserRoutes {
   private controller: UserController;
   private login: LoginController;
   private multer: MulterService;
-  readonly router: express.Router;
+  readonly router: Router;
 
   constructor() {
     this.controller = new UserController();
@@ -20,7 +22,7 @@ class UserRoutes {
   };
 
   public initRoutes(): void {
-    this.router.get("/", async (req: express.Request, res: express.Response) => {
+    this.router.get("/", async (req: Request, res: Response) => {
       try {
         const users = await this.controller.findAll();
         res.status(STATUS_OK).send(users);
@@ -29,7 +31,7 @@ class UserRoutes {
       };
     });
 
-    this.router.get("/:id", async ({ params: { id } }: express.Request, res: express.Response) => {
+    this.router.get("/:id", async ({ params: { id } }: Request, res: Response) => {
       try {
         const user = await this.controller.findById(id);
         res.status(STATUS_OK).send(user);
@@ -38,15 +40,21 @@ class UserRoutes {
       };
     });
 
-    this.router.post("/picture", this.multer.upload.single("picture"), async ({ body, file }: express.Request, res: express.Response) => {
+    this.router.post("/upload", async (req: Request, res: Response) => {
       try {
-        res.send("success");
+        await this.multer.upload(req, res, (error) => {
+          if (error) {
+            res.status(STATUS_NOT_FOUND).send(error)
+          };
+          Storage.upload(MULTER.UPLOADS_URL + req.file.originalname);
+          res.status(STATUS_OK).send();
+        });
       } catch (error) {
         res.send(error)
       }
     });
 
-    this.router.put("/", async ({ body }: express.Request, res: express.Response) => {
+    this.router.put("/", async ({ body }: Request, res: Response) => {
       try {
         const user = await this.controller.update(body);
         res.status(STATUS_OK).send(user);
@@ -55,7 +63,7 @@ class UserRoutes {
       };
     });
 
-    this.router.delete("/:id", async (req: express.Request, res: express.Response) => {
+    this.router.delete("/:id", async (req: Request, res: Response) => {
       try {
         await this.controller.delete(req.params.id);
         res.status(STATUS_OK)
@@ -64,7 +72,7 @@ class UserRoutes {
       };
     });
 
-    this.router.delete("/", async (req: express.Request, res: express.Response) => {
+    this.router.delete("/", async (req: Request, res: Response) => {
       try {
         const user = await this.login.logout(req.body.currentUser.id);
         res.status(STATUS_OK).send(user);
@@ -73,7 +81,7 @@ class UserRoutes {
       };
     });
 
-    this.router.post("/password/change", async ({ body }: express.Request, res: express.Response) => {
+    this.router.post("/password/change", async ({ body }: Request, res: Response) => {
       try {
         const result = await this.controller.changePassword({
           password: body.password,

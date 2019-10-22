@@ -11,6 +11,7 @@ export const MULTER = {
   MIMETYPE_JPEG: "image/jpeg",
   MIMETYPE_PNG: "image/png",
   TYPE_ERROR: "Invalid type of image",
+  PICTURE: "picture",
 };
 
 export const USER = "user";

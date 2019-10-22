@@ -7,6 +7,7 @@ dotenv.config();
 
 const app = express();
 
+
 bodyParserHandler.init(app);
 configurateRoutes.init(app);
 

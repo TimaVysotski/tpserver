@@ -21,7 +21,7 @@ class MulterService {
     upload = multer({
         storage: this.storage,
         fileFilter: this.fileFilter,
-    });
+    }).single(MULTER.PICTURE);
 };
 
 export default MulterService;

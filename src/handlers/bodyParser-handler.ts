@@ -1,8 +1,8 @@
 import bodyParser from "body-parser";
-import express from "express";
+import { Application } from "express";
 
 export const bodyParserHandler = {
-    init: (app: express.Application) => {
+    init: (app: Application) => {
         app.use(bodyParser.json());
     },
 };
