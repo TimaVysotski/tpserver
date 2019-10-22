@@ -1,32 +1,47 @@
+import { Gender, validPassword, validUsername, validEmail } from "../constants/validation";
+import { IUserBase } from "../interfaces/user";
+import validation from "../constants/errors";
+
 export const Validation = {
-    notEmpty(body: any) {
-        Object.keys(body).forEach(property => {
+    notEmpty(body: IUserBase) {
+        Object.keys(body).forEach((property: string) => {
             if (!property) {
-                throw `Request can not be consist of empty key.`;
+                throw validation.EMPTY_KEY;
             }
             if (!body[property]) {
-                throw `Parameter ${property} can not be empty.`;
+                throw validation.EMPTY_PARAMETR + property;
             }
         });
     },
-    correctParameters(body: any) {
-        this.checkUsername(body.username);
-        this.checkPassword(body.password);
-        this.checkGender(body.gender);
-    },
-    checkUsername(property: string){
-        if (property.includes(' ')) {
-            throw `Error! Check username data you entered. U can't use ' ' in your username.`;
+    checkUserData(body: IUserBase) {
+        try {
+            if (body.email) { this.checkUserEmail(body.email) };
+            if (body.username) { this.checkUserUsername(body.username) };
+            if (body.password) { this.checkUserPassword(body.password) };
+            if (body.gender) { this.checkUserGender(body.gender) };
+            return body;
+        } catch (error) {
+            throw error + validation.DATA_ERROR;
         }
     },
-    checkPassword(property: string){
-        if (property.includes(' ')) {
-            throw `Error! Check password data you entered. Incorrect symbol.`;
+    checkUserEmail(email?: string) {
+        if (!email || !validEmail.test(email)) {
+            throw validation.EMAIL;
         }
     },
-    checkGender(property: string) {
-        if ((property != "male") && (property != "famale")) {
-            throw `Error! Check gender data you entered.`;
+    checkUserUsername(username?: string) {
+        if (!username || !validUsername.test(username)) {
+            throw validation.USERNAME;
         }
-    }
-}
+    },
+    checkUserPassword(password?: string) {
+        if (!password || !validPassword.test(password)) {
+            throw validPassword;
+        }
+    },
+    checkUserGender(gender?: string) {
+        if (!(<any>Object).values(Gender).includes(gender)) {
+            throw validation.GENDER;
+        }
+    },
+};

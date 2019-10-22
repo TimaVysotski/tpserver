@@ -1,18 +1,7 @@
-import mongoose from "mongoose";
-
 import user from "./user";
 import post from "./post";
+import token from "./token";
 
-const connectDB = () => {
-    const { DATABASE_URL } = process.env;
-    if (!DATABASE_URL) {
-        throw 'DataBase connecting error';
-    }
-    return mongoose.connect(DATABASE_URL);
-};
+const models = { user, token, post };
 
-const models = { user, post };
-
-
-export { connectDB };
 export default models;
